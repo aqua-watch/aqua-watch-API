@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<title>Aqua Watch | Map</title>
+
+    <!-- CSS -->
+    <link rel= "stylesheet" type= "text/css" href= "../static/styles/style.css">
+    <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/style.css') }}">
+
+    <!-- JS -->
+    <script type="text/javascript" src="../static/js/script.js"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyArV6pWFiK7A90n0bisnJ_BmgSfwFoM4y0&callback=initMap"
+    async defer></script>
+	
+</head>
+
+<body>
+	<header class="header_subpage">
+		<div class="menu">
+				<a href="#">
+					<span onclick="openNav()">&#9776; Menu</span>
+				</a>
+			</div>
+		</div>
+
+		<h1>Aqua Watch</h1>
+	</header>
+
+	<!-- Side Navigation: appears when opened -->
+	<div id="mySidenav" class="sidenav">
+        <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+        <a href="{{ url_for('index') }}">Home</a><hr>
+        <a href="#" class="active">Search by Map</a><hr>
+        <a href="{{ url_for('your_water_quality') }}">Your Water Quality</a><hr>
+        <a href="{{ url_for('report_guide') }}">Understanding the Report</a><hr>
+	</div>
+
+	<div class="container_subpage_heading">
+		<h2>Search by Map</h2>
+		<br>
+		<div class="search_container">
+			<input type="text" placeholder="Search by address, city, or zipcode" name="search">
+			<button type="submit">Search</button>
+		</div>
+	</div>
+
+	<div id="map"></div>
+
+	<footer>
+		<div class="footer_text">
+			<h1>CS591 Project</h1>
+			<h2>Boston University Spring 2018</h2>
+		</div>
+	</footer>
+
+  </body>
+</html>
+
