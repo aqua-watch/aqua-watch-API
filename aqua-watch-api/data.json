@@ -1,0 +1,8 @@
+[{"address": {"state": "MA", "city": "Boston", "street": "111 Cummington Mall", "zipcode": "02215"}, "orp": "200 mV", "tds": "500 mg/L", "turbidity": "0.90 NTU", "ph": "7.5", "conductivity": "500 uS/cm"},
+{"address": {"state": "MA", "city": "Boston", "street": "111 Cummington Mall", "zipcode": "02215"}, "orp": "210 mV", "tds": "488 mg/L", "turbidity": "0.92 NTU", "ph": "6.95", "conductivity": "485 uS/cm"},
+{"address": {"state": "MA", "city": "Boston", "street": "700 Commonwealth Avenue", "zipcode": "02215"}, "orp": "245 mV", "tds": "450 mg/L", "turbidity": "0.85 NTU", "ph": "7.1", "conductivity": "456 uS/cm"},
+{"address": {"state": "MA", "city": "Boston", "street": "100 Bay State Road", "zipcode": "02215"}, "orp": "267 mV", "tds": "600 mg/L", "turbidity": "0.94 NTU", "ph": "6.9", "conductivity": "497 uS/cm"},
+{"address": {"state": "MA", "city": "Boston", "street": "47 Buswell Street", "zipcode": "02215"}, "orp": "400 mV", "tds": "405 mg/L", "turbidity": "1.12 NTU", "ph": "8.1", "conductivity": "514 uS/cm"},
+{"address": {"state": "MA", "city": "Boston", "street": "575 Commonwealth Avenue", "zipcode": "02215"}, "orp": "180 mV", "tds": "559 mg/L", "turbidity": "0.75 NTU", "ph": "7.7", "conductivity": "558 uS/cm"},
+{"address": {"state": "MA", "city": "Boston", "street": "33 Harry Agganis Way", "zipcode": "02215"}, "orp": "210 mV", "tds": "519 mg/L", "turbidity": "1.25 NTU", "ph": "7.9", "conductivity": "600 uS/cm"},
+{"address": {"state": "MA", "city": "Boston", "street": "518 Park Drive", "zipcode": "02215"}, "orp": "320 mV", "tds": "612 mg/L", "turbidity": "0.78 NTU", "ph": "7.2", "conductivity": "433 uS/cm"}]

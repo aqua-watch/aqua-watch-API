@@ -1,0 +1,61 @@
+<!-- AquaWatch -->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<title>Aqua Watch | Your Water Quality</title>
+
+    <!-- CSS -->
+    <link rel= "stylesheet" type= "text/css" href= "../static/styles/style.css">
+    <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/style.css') }}">
+
+    <!-- JS -->
+    <script type="text/javascript" src="../static/js/script.js"></script>
+	
+</head>
+
+<body>
+	<header class="header_subpage">
+		<div class="menu">
+				<a href="#">
+					<span onclick="openNav()">&#9776; Menu</span>
+				</a>
+			</div>
+		</div>
+
+		<h1>Aqua Watch</h1>
+	</header>
+
+	<!-- Side Navigation: appears when opened -->
+	<div id="mySidenav" class="sidenav">
+        <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+        <a href="{{ url_for('index') }}">Home</a><hr>
+        <a href="{{ url_for('map') }}">Search by Map</a><hr>
+        <a href="#" class="active">Your Water Quality</a><hr>
+        <a href="{{ url_for('report_guide') }}">Understanding the Report</a><hr>
+	</div>
+
+	<div class="container_content">
+		<h2>Your Water Quality</h2>
+        </br>
+        {% for result in results %}
+            <p>Location: {{result[0]}}</p>
+            <p>Oxidation-Reduction-Potential: {{result[1]}}</p>
+            <p>Total Dissolved Solids: {{result[2]}}</p>
+            <p>Turbidity: {{result[3]}}</p>
+            <p>ph: {{result[4]}}</p>
+            <p>Conductivity: {{result[5]}}</p>
+            </br>
+        {% endfor %}
+	</div>
+
+
+	<footer>
+		<div class="footer_text">
+			<h1>CS591 Project</h1>
+			<h2>Boston University Spring 2018</h2>
+		</div>
+	</footer>
+
+</body>
+</html>

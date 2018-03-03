@@ -4,3 +4,6 @@ MarkupSafe==1.0
 Werkzeug==0.14.1
 click==6.7
 itsdangerous==0.24
+PyMongo==3.6.1
+mongoengine==0.15.0
+dnspython==1.15.0
