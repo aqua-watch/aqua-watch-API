@@ -33,10 +33,15 @@ def map():
 def your_water_quality():
     # for purposes of this example I empty the database before inserting every time localhost:5000 is loaded
     data.remove({})
-    # open .JSON file
+    # open .JSON file. In this case the file is opened locally
     response = urllib.request.urlopen("file:///C:/Users/Victor/Documents/Boston%20University/Semester%206%20-%20Spring%202018/CS%20591%20M1/AquaWatch/aqua-watch-API-frontend/aqua-watch-api/data.json")
+    # convert json to list of python dictionaries
+    dict_list = json.loads(response.read()) # we can change these dictionaries to create our actual data to be stored in the database
+    # convert list of python dictionaries to json
+    docs = json.dumps(dict_list)
     # convert list of JavaScript objects (.JSON file) into Mongo documents
-    docs = json_util.loads(response.read())
+    # docs = json_util.loads(response.read()) --> if doing directly from first file read
+    docs = json_util.loads(docs) # --> if we do something in the middle (changing the python dictionaries)
     # insert all documents
     data.insert_many(docs)
     # simple query
