@@ -4,10 +4,11 @@
 ##
 ###########################################
 
-from flask import Flask, render_template
+from flask import Flask, render_template, request
 from pymongo import MongoClient
 from bson import json_util
 import sys, urllib.request, json, pprint
+from ast import literal_eval
 
 # initialize Flask
 app = Flask(__name__)
@@ -29,22 +30,30 @@ def index():
 def map():
     return render_template('map.html')
 
+@app.route('/sensors', methods=['POST'])
+def getData():
+    # for debugging purposes I empty the database before inserting every time this function is called
+    # we only have limited storage space
+    data.remove({})
+    # to get data
+    response = request.get_data().decode("utf-8")
+    # don't include .decode("utf-8") if data is json instead of raw
+    # convert string to dictionary
+    response = [literal_eval(response)]
+    # if data is json instead of raw uncomment line below and comment line above
+    # response = json.loads(response.read())
+    pprint.pprint(response)
+    # convert dictionary to javascript object
+    response = json.dumps(response)
+    # convert javascript object to MongoDB document
+    docs = json_util.loads(response)
+    # insert into database
+    data.insert_many(docs)
+    # to test for correctness look at your_water_quality view function and your_water_quality.html
+    return "successful"
+
 @app.route('/your_water_quality', methods=['GET', 'POST'])
 def your_water_quality():
-    # for purposes of this example I empty the database before inserting every time localhost:5000 is loaded
-    data.remove({})
-    # open .JSON file. In this case the file is opened locally
-    response = urllib.request.urlopen("file:///C:/Users/Victor/Documents/Boston%20University/Semester%206%20-%20Spring%202018/CS%20591%20M1/AquaWatch/aqua-watch-API-frontend/aqua-watch-api/data.json")
-    # convert json to list of python dictionaries
-    dict_list = json.loads(response.read()) # we can change these dictionaries to create our actual data to be stored in the database
-    # convert list of python dictionaries to json
-    docs = json.dumps(dict_list)
-    # convert list of JavaScript objects (.JSON file) into Mongo documents
-    # docs = json_util.loads(response.read()) --> if doing directly from first file read
-    docs = json_util.loads(docs) # --> if we do something in the middle (changing the python dictionaries)
-    # insert all documents
-    data.insert_many(docs)
-    # simple query
     cursor = list(data.find({"address.street": "111 Cummington Mall"}))
     # to store results from cursor
     results = []
