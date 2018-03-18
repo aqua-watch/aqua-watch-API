@@ -20,40 +20,42 @@ db = client.leadmap
 # select collection
 data = db.data
 
-@app.route("/", methods=['GET', 'POST'])
+@app.route("/", methods=['GET'])
 def index():
     """ main page
     """
     return render_template('index.html')
 
-@app.route('/map', methods=['GET', 'POST'])
+@app.route('/map', methods=['GET'])
 def map():
     return render_template('map.html')
 
 @app.route('/sensors', methods=['POST'])
-def getData():
+def extract_data():
+    # tested with: [{"address": {"state": "MA", "city": "Boston", "street": "111 Cummington Mall", "zipcode": "02215"}, "orp": "200 mV", "tds": "500 mg/L", "turbidity": "0.90 NTU", "ph": "7.5", "conductivity": "500 uS/cm"}]
+    # has to be a list of one or more javascript objects
     # for debugging purposes I empty the database before inserting every time this function is called
     # we only have limited storage space
     data.remove({})
-    # to get data
+    # to get data as string
     response = request.get_data().decode("utf-8")
     # don't include .decode("utf-8") if data is json instead of raw
-    # convert string to dictionary
-    response = [literal_eval(response)]
+    # convert string to list of dictionaries
+    response = literal_eval(response)
     # if data is json instead of raw uncomment line below and comment line above
     # response = json.loads(response.read())
-    pprint.pprint(response)
-    # convert dictionary to javascript object
+    # convert list of dictionaries to list of javascript objects
     response = json.dumps(response)
-    # convert javascript object to MongoDB document
+    # convert list of javascript objects to MongoDB documents
     docs = json_util.loads(response)
-    # insert into database
+    # insert many documents into cloud database
     data.insert_many(docs)
     # to test for correctness look at your_water_quality view function and your_water_quality.html
     return "successful"
 
-@app.route('/your_water_quality', methods=['GET', 'POST'])
+@app.route('/your_water_quality', methods=['GET'])
 def your_water_quality():
+    # simple query
     cursor = list(data.find({"address.street": "111 Cummington Mall"}))
     # to store results from cursor
     results = []
@@ -63,7 +65,7 @@ def your_water_quality():
                      current['address']['state'], current['orp'], current['tds'], current['turbidity'], current['ph'], current['conductivity']]]
     return render_template('your_water_quality.html', results=results)
 
-@app.route('/report_guide', methods=['GET', 'POST'])
+@app.route('/report_guide', methods=['GET'])
 def report_guide():
     return render_template('report_guide.html')
 
