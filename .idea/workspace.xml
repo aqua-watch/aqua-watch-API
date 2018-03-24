@@ -2,15 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="36f78110-8aba-429f-8a69-274084deb9ed" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/aqua-watch-api/app.py" afterPath="$PROJECT_DIR$/aqua-watch-api/app.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/aqua-watch-api/requirements.txt" afterPath="$PROJECT_DIR$/aqua-watch-api/requirements.txt" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/aqua-watch-api/static/js/script.js" afterPath="$PROJECT_DIR$/aqua-watch-api/static/js/script.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/aqua-watch-api/static/styles/style.css" afterPath="$PROJECT_DIR$/aqua-watch-api/static/styles/style.css" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/aqua-watch-api/templates/index.html" afterPath="$PROJECT_DIR$/aqua-watch-api/templates/index.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/aqua-watch-api/templates/map.html" afterPath="$PROJECT_DIR$/aqua-watch-api/templates/map.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/aqua-watch-api/templates/report_guide.html" afterPath="$PROJECT_DIR$/aqua-watch-api/templates/report_guide.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/aqua-watch-api/templates/your_water_quality.html" afterPath="$PROJECT_DIR$/aqua-watch-api/templates/your_water_quality.html" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/aqua-watch-api/app.py.orig" afterPath="" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -29,9 +21,7 @@
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="105">
               <caret line="5" column="0" lean-forward="false" selection-start-line="5" selection-start-column="0" selection-end-line="5" selection-end-column="0" />
-              <folding>
-                <element signature="e#108#157#0" expanded="true" />
-              </folding>
+              <folding />
             </state>
           </provider>
         </entry>
@@ -170,49 +160,25 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scratches" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
             <path>
-              <item name="aqua-watch-API-frontend" type="b2602c69:ProjectViewProjectNode" />
-              <item name="aqua-watch-API-frontend" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="aqua-watch-API-frontend" type="b2602c69:ProjectViewProjectNode" />
-              <item name="aqua-watch-API-frontend" type="462c0819:PsiDirectoryNode" />
-              <item name="aqua-watch-api" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="aqua-watch-API-frontend" type="b2602c69:ProjectViewProjectNode" />
-              <item name="aqua-watch-API-frontend" type="462c0819:PsiDirectoryNode" />
-              <item name="aqua-watch-api" type="462c0819:PsiDirectoryNode" />
-              <item name="static" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="aqua-watch-API-frontend" type="b2602c69:ProjectViewProjectNode" />
-              <item name="aqua-watch-API-frontend" type="462c0819:PsiDirectoryNode" />
-              <item name="aqua-watch-api" type="462c0819:PsiDirectoryNode" />
-              <item name="static" type="462c0819:PsiDirectoryNode" />
-              <item name="js" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="aqua-watch-API-frontend" type="b2602c69:ProjectViewProjectNode" />
-              <item name="aqua-watch-API-frontend" type="462c0819:PsiDirectoryNode" />
-              <item name="aqua-watch-api" type="462c0819:PsiDirectoryNode" />
-              <item name="templates" type="462c0819:PsiDirectoryNode" />
+              <item name="aqua-watch-API" type="b2602c69:ProjectViewProjectNode" />
+              <item name="aqua-watch-API" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
         </subPane>
       </pane>
       <pane id="Scope" />
+      <pane id="Scratches" />
     </panes>
   </component>
   <component name="PropertiesComponent">
     <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../../aqua-watch-API-frontend - Copy" />
     <property name="DefaultHtmlFileTemplate" value="HTML File" />
     <property name="list.type.of.created.stylesheet" value="CSS" />
   </component>
@@ -271,6 +237,7 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="-9" y="-9" width="1938" height="1048" extended-state="6" />
+    <editor active="true" />
     <layout>
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
@@ -343,9 +310,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding>
-            <element signature="e#108#157#0" expanded="true" />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
@@ -396,9 +361,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding>
-            <element signature="e#108#157#0" expanded="true" />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
@@ -449,9 +412,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding>
-            <element signature="e#108#157#0" expanded="true" />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
@@ -495,9 +456,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding>
-            <element signature="e#108#157#0" expanded="true" />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
@@ -541,9 +500,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding>
-            <element signature="e#108#157#0" expanded="true" />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
@@ -614,14 +571,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/aqua-watch-api/templates/index.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="63">
-          <caret line="3" column="0" lean-forward="false" selection-start-line="3" selection-start-column="0" selection-end-line="3" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/aqua-watch-api/templates/login.html">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="63">
@@ -686,13 +635,19 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/aqua-watch-api/templates/index.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="63">
+          <caret line="3" column="0" lean-forward="false" selection-start-line="3" selection-start-column="0" selection-end-line="3" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/aqua-watch-api/app.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="105">
           <caret line="5" column="0" lean-forward="false" selection-start-line="5" selection-start-column="0" selection-end-line="5" selection-end-column="0" />
-          <folding>
-            <element signature="e#108#157#0" expanded="true" />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
