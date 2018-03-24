@@ -10,6 +10,7 @@ function closeNav() {
     document.getElementById("main").style.marginLeft = "0";
 }
 
+
 /* Google Maps */
 var map;
 function initMap() {

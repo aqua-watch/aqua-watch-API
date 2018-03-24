@@ -24,6 +24,46 @@
 		</div>
 
 		<h1>Aqua Watch</h1>
+
+        {% if logged_in %}
+            <div id="login-register" style="display:none;">
+                <form method="get" action="{{ url_for('login') }}">
+                    <button id="login" type="submit">Log in</button>
+                </form>
+
+                <form method="get" action="{{ url_for('register') }}">
+                    <button id="register" type="submit">Register</button>
+                </form>
+            </div>
+            <div id="logout-user" style="display:flex;">
+                {% if fname %}
+                    <p>Hello, {{ fname }}</p>
+                {% endif %}
+                <form method="get" action="{{ url_for('logout') }}">
+                    <button id="logout" type="submit">Log out</button>
+                </form>
+            </div>
+        {% endif %}
+        {% if not_logged_in %}
+            <div id="login-register" style="display:flex;">
+                <form method="get" action="{{ url_for('login') }}">
+                    <button id="login" type="submit">Log in</button>
+                </form>
+
+                <form method="get" action="{{ url_for('register') }}">
+                    <button id="register" type="submit">Register</button>
+                </form>
+            </div>
+
+            <div id="logout-user"  style="display:none;">
+                {% if fname %}
+                    <p>Hello, {{ fname }}</p>
+                {% endif %}
+                <form method="get" action="{{ url_for('logout') }}">
+                    <button id="logout" type="submit">Log out</button>
+                </form>
+            </div>
+        {% endif %}
 	</header>
 
 	<!-- Side Navigation: appears when opened -->
@@ -40,11 +80,13 @@
         </br>
         {% for result in results %}
             <p>Location: {{result[0]}}</p>
-            <p>Oxidation-Reduction-Potential: {{result[1]}}</p>
-            <p>Total Dissolved Solids: {{result[2]}}</p>
-            <p>Turbidity: {{result[3]}}</p>
-            <p>ph: {{result[4]}}</p>
-            <p>Conductivity: {{result[5]}}</p>
+            <p>Latitude: {{result[1]}}</p>
+            <p>Longitude: {{result[2]}}</p>
+            <p>Oxidation-Reduction-Potential: {{result[3]}}</p>
+            <p>Total Dissolved Solids: {{result[4]}}</p>
+            <p>Turbidity: {{result[5]}}</p>
+            <p>ph: {{result[6]}}</p>
+            <p>Conductivity: {{result[7]}}</p>
             </br>
         {% endfor %}
 	</div>
