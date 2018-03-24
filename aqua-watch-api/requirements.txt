@@ -4,3 +4,7 @@ MarkupSafe==1.0
 Werkzeug==0.14.1
 click==6.7
 itsdangerous==0.24
+PyMongo==3.6.1
+dnspython==1.15.0
+flask-googlemaps==0.2.5
+Flask-Login==0.4.1
