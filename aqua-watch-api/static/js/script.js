@@ -28,3 +28,4 @@ function initMap() {
 		title: 'Marker'
 	})
 }
+
