@@ -24,7 +24,7 @@
 			</div>
 		</div>
 
-		<h1>Aqua Watch</h1>
+		<a href="{{ url_for('index') }}"><h1>Aqua Watch</h1></a>
 
         {% if logged_in %}
             <div id="login-register" style="display:none;">
@@ -78,14 +78,58 @@
 
 	<div class="container_content">
 		<h2>Report Guide</h2>
-		<br>
-		<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent tristique hendrerit felis eget congue. Maecenas viverra porta faucibus. Nam at tortor sed est condimentum efficitur. Ut tellus leo, gravida sit amet erat ac, feugiat lobortis magna. Nam ullamcorper tempor est a ultrices. Vivamus at neque sem. Maecenas aliquam, nisl ut dictum porttitor, erat nulla volutpat magna, vitae eleifend justo leo at lacus. Phasellus ac maximus enim. Integer quam velit, congue tincidunt tempus sodales, maximus nec nunc. Cras non dictum leo. Vestibulum placerat quam felis, et vulputate est vulputate vitae.</p>
-		<br>
-		<p>Nulla vel porttitor dui. Suspendisse quis erat eu mauris tristique lobortis sed quis metus. Pellentesque interdum fermentum tellus id aliquam. Aliquam imperdiet tincidunt lorem a sollicitudin. Nullam rutrum tortor eget mauris sagittis mattis. Nam quam nisl, pellentesque vel ligula eu, mollis aliquet nibh. Duis cursus arcu eget est euismod posuere. Suspendisse eget tempus nulla, eget ullamcorper sapien. Aenean eget interdum velit.</p>
-		<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent tristique hendrerit felis eget congue. Maecenas viverra porta faucibus. Nam at tortor sed est condimentum efficitur. Ut tellus leo, gravida sit amet erat ac, feugiat lobortis magna. Nam ullamcorper tempor est a ultrices. Vivamus at neque sem. Maecenas aliquam, nisl ut dictum porttitor, erat nulla volutpat magna, vitae eleifend justo leo at lacus. Phasellus ac maximus enim. Integer quam velit, congue tincidunt tempus sodales, maximus nec nunc. Cras non dictum leo. Vestibulum placerat quam felis, et vulputate est vulputate vitae.</p>
-		<br>
-		<p>Nulla vel porttitor dui. Suspendisse quis erat eu mauris tristique lobortis sed quis metus. Pellentesque interdum fermentum tellus id aliquam. Aliquam imperdiet tincidunt lorem a sollicitudin. Nullam rutrum tortor eget mauris sagittis mattis. Nam quam nisl, pellentesque vel ligula eu, mollis aliquet nibh. Duis cursus arcu eget est euismod posuere. Suspendisse eget tempus nulla, eget ullamcorper sapien. Aenean eget interdum velit.</p>
-	</div>
+        <br>
+        <p>Aqua Watch measures a broad range of different variables and substances to give you a detailed report on your water quality. Below are the different variables we measure, and how they can affect the drinking quality of your water.</p>
+
+        <br><br>
+
+        <h3>Conductivity</h3>
+        <br>
+        <b><p>Acceptable drinking water: 5 mS/m - 50 mS/m</p></b>
+        <p>Conductivity is a measure of water's capability to pass electrical flow. This ability is directly related to the concentration of ions in the water. These conductive ions come from dissolved salts and inorganic materials such as alkalis, chlorides, sulfides and carbonate compound. The more ions that are present, the higher the conductivity of water. Distilled or deionized water can act as an insulator and has a very low conductivity value. Sea water, on the other hand, has a very high conductivity. Temperature increases of 1&degC leads to 2-4% increase in conductivity.</p>
+        <p>Higher conductivity: 5 S/m (sea water). Corrosion of metallic surfaces.</p>
+        <p>Low conductivity: 5.5 mewS/m (deionized water). Attacks pipes leaching metals into water.</p>
+        <a href="http://www.fondriest.com/environmental-measurements/parameters/water-quality/conductivity-salinity-tds/">Source.</a>
+
+        <br><br>
+        
+        <h3>Total Dissolved Solids (TDS)</h3>
+        <br>
+        <b><p>Acceptable drinking water: Less than 500mg/L </p></b>
+        <p>Dissolved solids refer to any minerals, salts, metals, cations or anions dissolved in water. TDS in drinking water originate from natural sources, sewage, urban run-off, industrial wastewater, and chemicals used in the water treatment process, and the nature of the piping or hardware used to convey the water (i.e., the plumbing). In the United States, elevated TDS has been due to natural environmental features such as mineral springs, carbonate deposits, salt deposits, and sea water intrusion, but other sources may include: salts used for road de-icing, anti-skid materials, drinking water treatment chemicals, stormwater, and agricultural runoff, and point/non-point wastewater discharges.</p>
+        <br>
+        <p>High levels of TDS can result in your water having a bitter or salty taste; result in incrustations, films, or precipitates on fixtures; corrosion of fixtures, and reduced efficiency of water filter and equipment. The TDS concentration is a secondary drinking water standard and, therefore, is regulated because it is more of an aesthetic rather than a health hazard. High total dissolved solids may affect the aesthetic quality of the water, interfere with washing clothes and corroding plumbing fixtures. For aesthetic reasons, a limit of 500 mg/L has been established as part of the Secondary Drinking Water Standards.</p>
+        <a href="https://www.water-research.net/index.php/water-treatment/tools/total-dissolved-solids">Source.</a>
+
+        <br><br>
+        
+        <h3>pH</h3>
+        <br>
+        <b><p>Acceptable drinking water: Close to 7.0, or between 6-8.5 </p></b>
+        <p>The pH value of water is a good indicator of how basic or acidic (how hard or soft) the water is. The pH of pure water is 7. In general, water with a pH lower than 7 is considered acidic, and with a pH greater than 7 is considered basic. The normal range for pH in surface water systems is 6.5 to 8.5, and the pH range for groundwater systems is between 6 to 8.5. Alkalinity is a measure of the capacity of the water to resist a change in pH that would tend to make the water more acidic.</p>
+        <br>
+        <p>In general, water with a pH less than 6.5 could be acidic, soft, and corrosive. Acidic water could contain elevated levels of toxic metals such as iron, manganese, copper, lead, and zinc, which poses a health risk. Acidic water can cause premature damage to metal piping, and have associated aesthetic problems such as a metallic or sour taste. It can also stain laundry and cause “blue-green” color staining on sinks and drains.</p>
+        <br>
+        <p>Water with a pH greater than 8.5 could indicate that the water is hard. Hard water does not pose a health risk, but can also cause aesthetic problems. These problems include an alkali taste to the water (making things bitter), formation of scale deposits on dishes, utensils, and laundry basins, difficulty in getting soaps and detergents to lather, and the formation of insoluble precipitates on clothing.</p>
+        <a href="https://www.freedrinkingwater.com/water-education/quality-water-ph-page2.htm">Source.</a>
+
+        <br><br>
+        
+        <h3>Turbidity</h3>
+        <br>
+        <b><p>Acceptable drinking water: Ideally <= 1 NTU, or <= 5 NTU </p></b>
+        <p>Turbidity is the cloudiness or haziness of water due to presence of suspended particles, and is measured by NTU (Nephelometric Turbidity Units). The more total suspended solids in the water, the murkier it seems and the higher the turbidity. Erosion, construction, mining, agriculture, and organisms such as phytoplankton can contribute to the turbidity in water. Contaminants such as viruses and pathogenic bacteria can attach themselves to the suspended solids, and a person could develop gastrointestinal diseases and experience symptoms such as nausea, cramps, and diarrhea.</p>
+        <a href="http://www.lamotte.com/en/blog/test-factors/91-what-is-turbidity">Source.</a>
+
+        <br><br>
+        
+        <h3>Oxidation Reduction Potential (ORP)</h3>
+        <br>
+        <b><p>Acceptable drinking water: +200mV to +600mV </p></b>
+        <p>ORP is the presence of oxidizing and/or reducing agents in the water.  Normal tap water, bottled water, rain water, and so forth, have a positive ORP generally between 200-400 mV. A high ORP is desired in sewage treatment, swimming pools, and spas, because the higher the ORP, the more oxidation will occur, thus killing the bacteria and unwanted pathogens. Chlorine is added to water because it has a high ORP and thus is an effective bactericidal. A low ORP is seen with certain human biological fluids. However, more important than the ORP value is the chemical species responsible for that ORP value. Indeed, something with a negative ORP could actually be toxic, and something with a positive ORP may actually be therapeutic.</p>
+        <a href="http://www.molecularhydrogenfoundation.org/importance-of-oxidation-reduction-potential-orp/">Source.</a>
+	
+    </div>
 
 
 	<footer>
