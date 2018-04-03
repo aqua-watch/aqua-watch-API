@@ -8,10 +8,7 @@ from flask import Flask, render_template, request
 from flask_googlemaps import GoogleMaps, Map
 from pymongo import MongoClient
 from bson import json_util
-try:
-    from urllib.parse import urlparse
-except ImportError:
-     from urlparse import urlparse
+import urllib.parse, urllib.request, json, pprint
 from ast import literal_eval
 import requests
 from flask_login import LoginManager, UserMixin, login_required, login_user, logout_user
