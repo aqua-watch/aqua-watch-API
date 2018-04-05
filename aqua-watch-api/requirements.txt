@@ -14,8 +14,14 @@ pycurl==7.19.3
 pygobject==3.12.0
 pymongo==3.6.1
 python-apt===0.9.3.5ubuntu2
-requests==2.18.4
 ufw===0.34-rc-0ubuntu2
 unattended-upgrades==0.1
 urllib3==1.22
 Werkzeug==0.14.1
+click==6.7
+itsdangerous==0.24
+PyMongo==3.6.1
+dnspython==1.15.0
+flask-googlemaps==0.2.5
+Flask-Login==0.4.1
+requests==2.18.4
