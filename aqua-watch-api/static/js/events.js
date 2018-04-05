@@ -15,22 +15,22 @@ var Events = class events{
   			let address = $("#address").val();
   			let getUrl = window.location;
 			let baseUrl = getUrl .protocol + "//" + getUrl.host + "/" + getUrl.pathname.split('/')[0];
-
-  			let url = baseUrl + "/addAdress";
+  			let uri = baseUrl + "addAddress";
+  			let urlObj = new URL(getUrl);
+  			let itemCode = urlObj.searchParams.get("item-code");
 
   			var request = $.ajax({
-		        url: url,
+		        url: uri,
 		        type: "post",
-		        data: {item_code: , address: }
+		        data: {item_code: itemCode, address: address}
 		    });
 
 		    // Callback handler that will be called on success
 		    request.done(function (response, textStatus, jqXHR){
 		        // Log a message to the console
 		        console.log("Hooray, it worked! and here is the response: \t" + response);
-		        
-		        constructTable(response);
 		    });
+			
   		}
 
   		function addItemCode(){

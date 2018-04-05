@@ -208,9 +208,12 @@ def extract_data():
     # for debugging purposes I empty the database before inserting every time this function is called
     # we only have limited storage space
     #data.remove({})
+    
     cursor = data.find({})
     for document in cursor:
           print(document)
+
+    
     # to get data as string
     response = request.get_data().decode("utf-8")
     # don't include .decode("utf-8") if data is json instead of raw
@@ -223,12 +226,12 @@ def extract_data():
     # if data is json instead of raw uncomment line below and comment line above
     #response = json.loads(response)
     # convert list of dictionaries to list of javascript objects
-    docs = json.dumps(docs)
+    docs = json.dumps([docs])
     docs = json_util.loads(docs)
     
     #docs = bson.BSON.encode(docs)
-    print(docs)
-    print(type(docs))
+    #print(docs)
+    #print(type(docs))
 
     data.insert_many(docs)
     return "successful"
@@ -238,11 +241,12 @@ def your_water_quality():
     """ View function so far used for debugging
     """
     item_code = request.args.get("item-code")
+    
     if(item_code == "" or item_code is None):   
         #generate the view so that they can add an item code
         return render_template('your_water_quality.html', has_item_code=0)
-
-    cursor = list(data.find({"address": "111 Cummington Mall, Boston, MA 02215, USA"}))
+    item_code = item_code.strip()
+    cursor = list(data.find({"product-code":item_code}))
     # to store results from cursor
     results = cursor[0]
     results = removekey(results, "_id")
@@ -251,7 +255,6 @@ def your_water_quality():
         has_address = 0
     else:
         has_address = 1
-
 
     if (user):
         return render_template('your_water_quality.html', item_code=item_code, has_item_code=1,
@@ -264,6 +267,41 @@ def removekey(d, key):
     r = dict(d)
     del r[key]
     return r
+
+
+@app.route('/addAddress', methods=['POST'])
+def add_address():
+    try:
+        address = request.form.get('address')
+        code = request.form.get('code')
+
+    except Exception as e:
+        return json.dumps("incorrect request" + str(e))
+
+    #format address and get lat and long
+    response = requests.get("https://maps.googleapis.com/maps/api/geocode/json?address=" + urllib.parse.quote(address) + "&key=AIzaSyCHdvF13xoB27xgdUQzmylu5mW320-7mjc").content.decode("utf-8")
+    response = literal_eval(response)
+
+    if (response['status'] != 'OK'):
+        return json.dumps("incorrect address")
+
+    address = response['results'][0]['formatted_address']
+    latitude = response['results'][0]['geometry']['location']['lat']
+    longitude = response['results'][0]['geometry']['location']['lng']
+    
+    #update the collection
+    data.update_one(
+        {"code": code},
+        {
+        "$set": {
+            "address":address,
+            "latitude":latitude,
+            "longitude":longitude
+            }
+        }
+    )
+
+    return "True"
 
 
 @app.route('/report_guide', methods=['GET'])

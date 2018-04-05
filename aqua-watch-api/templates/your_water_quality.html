@@ -4,7 +4,6 @@
 	<div class="container">
         
         <div class="page-header"> <h2> Your item code: {{item_code}} </h2></div>
-        <h1>{{has_address}}</h1>
         </br>
         <ul>
         {% for key, value in results.items() %} 
@@ -14,11 +13,11 @@
 
         {% if not has_address %}
         <div class="add-address">
-            <h4> Add an address associated with your product </h4>
+            <h4> Add/Update an address associated with your product </h4>
             <label for="address"> Address: </label>
             <input type="text" name="address" id="address">
 
-            <button class="btn tbn-primary">Add Address</button>
+            <button class="btn tbn-primary" id="add-address">Add Address</button>
         </div>    
         {% endif %}
 
