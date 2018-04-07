@@ -63,10 +63,10 @@ users = db.users
 user = None
 
 
-"""
+
 class User():
 
-    def __init__(self, email, first_name, last_name, displayName):
+    def __init__(self, email, first_name, last_name, displayName, product):
         self.email = email
         self.first_name = first_name
         self.last_name = last_name
@@ -83,7 +83,6 @@ class User():
 
     def get_id(self):
         return self.email
-"""
 
 """
 class User(UserMixin):
@@ -252,8 +251,7 @@ def credentials_to_dict(credentials):
 @app.route('/revoke')
 def revoke():
   if 'credentials' not in flask.session:
-    return ('You need to <a href="/authorize">authorize</a> before ' +
-            'testing the code to revoke credentials.')
+    return ('You need to authorize before revoking credentials.')
 
   credentials = google.oauth2.credentials.Credentials(
     **flask.session['credentials'])
