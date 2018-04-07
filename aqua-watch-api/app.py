@@ -37,7 +37,6 @@ app = Flask(__name__)
 # connect to Google Maps API
 GoogleMaps(app, key='AIzaSyDC7vvV9T9pQBTeXIc-edWfP20tPO-dx0A')
 
-
 """
 # begin code used for login
 login_manager = LoginManager()
@@ -61,8 +60,6 @@ users = db.users
 
 # the user
 user = None
-
-
 
 class User():
 
@@ -158,13 +155,6 @@ def login():
     user_firstName = user_document['name']['givenName']
     user_email = user_document['emails'][0]['value']
     user_image = user_document['image']['url']
-
-
-    print user_displayName
-    print user_firstName
-    print user_lastName
-    print user_email
-    print user_image
 
     # Save credentials back to session in case access token was refreshed.
     # ACTION ITEM: In a production app, you likely want to save these
@@ -387,42 +377,109 @@ def map():
 
 @app.route('/sensors', methods=['POST'])
 def extract_data():
-    # tested with: [{"address": "111 Cummington Mall, Boston, MA 02215, USA", "latitude": 42.3490961, "longitude": -71.1041893, "orp": "200 mV", "tds": "500 mg/L", "turbidity": "0.90 NTU", "ph": "7.5", "conductivity": "500 uS/cm"}]
+    # tested with: [{"address": "111 Cummington Mall, Boston, MA 02215, USA", "latitude": 42.3490961,
+    # "longitude": -71.1041893, "orp": "200 mV", "tds": "500 mg/L", "turbidity": "0.90 NTU", "ph": "7.5",
+    # "conductivity": "500 uS/cm", "item-code": "99MQQR9M"}]
+
     # has to be a list of one or more javascript objects
     # for debugging purposes I empty the database before inserting every time this function is called
     # we only have limited storage space
-    data.remove({})
+    #data.remove({})
+    
+    cursor = data.find({})
+    for document in cursor:
+          print(document)
+
+    
     # to get data as string
     response = request.get_data().decode("utf-8")
     # don't include .decode("utf-8") if data is json instead of raw
     # convert string to list of dictionaries
-    response = literal_eval(response)
+    docs = literal_eval(response)
+    docs["address"] = ""
+    docs["latitude"] = ""
+    docs["longitude"] = ""
+    #docs['item-code'] = ""
     # if data is json instead of raw uncomment line below and comment line above
-    # response = json.loads(response.read())
+    #response = json.loads(response)
     # convert list of dictionaries to list of javascript objects
-    response = json.dumps(response)
-    # convert list of javascript objects to MongoDB documents
-    docs = json_util.loads(response)
-    # insert many documents into cloud database
+    docs = json.dumps([docs])
+    docs = json_util.loads(docs)
+    
+    #docs = bson.BSON.encode(docs)
+    #print(docs)
+    #print(type(docs))
+
     data.insert_many(docs)
-    # to test for correctness look at your_water_quality view function and your_water_quality.html
     return "successful"
 
 @app.route('/your_water_quality', methods=['GET'])
 def your_water_quality():
     """ View function so far used for debugging
     """
-    # simple query
-    cursor = list(data.find({"address": "111 Cummington Mall, Boston, MA 02215, USA"}))
+    item_code = request.args.get("item-code")
+    
+    if(item_code == "" or item_code is None):   
+        #generate the view so that they can add an item code
+        return render_template('your_water_quality.html', has_item_code=0)
+    item_code = item_code.strip()
+    cursor = list(data.find({"product-code":item_code}))
     # to store results from cursor
-    results = []
-    for i in range(len(cursor)):
-        current = cursor[i]
-        results += [[current['address'], current['latitude'], current['longitude'], current['orp'], current['tds'], current['turbidity'], current['ph'], current['conductivity']]]
-    if (user):
-        return render_template('your_water_quality.html', results=results, fname=user.first_name, logged_in=1)
+    results = cursor[0]
+    results = removekey(results, "_id")
+
+    if results["address"] == "" or results["address"] == None:
+        has_address = 0
     else:
-        return render_template('your_water_quality.html', results=results, not_logged_in=1)
+        has_address = 1
+
+    if (user):
+        return render_template('your_water_quality.html', item_code=item_code, has_item_code=1,
+         results=results, fname=user.first_name, logged_in=1, has_address= 0)
+    else:
+        return render_template('your_water_quality.html', item_code=item_code, has_item_code=1,
+         results=results, not_logged_in=1, has_address= 0)
+
+def removekey(d, key):
+    r = dict(d)
+    del r[key]
+    return r
+
+
+@app.route('/addAddress', methods=['POST'])
+def add_address():
+    try:
+        address = request.form.get('address')
+        code = request.form.get('code')
+
+    except Exception as e:
+        return json.dumps("incorrect request" + str(e))
+
+    #format address and get lat and long
+    response = requests.get("https://maps.googleapis.com/maps/api/geocode/json?address=" + urllib.parse.quote(address) + "&key=AIzaSyCHdvF13xoB27xgdUQzmylu5mW320-7mjc").content.decode("utf-8")
+    response = literal_eval(response)
+
+    if (response['status'] != 'OK'):
+        return json.dumps("incorrect address")
+
+    address = response['results'][0]['formatted_address']
+    latitude = response['results'][0]['geometry']['location']['lat']
+    longitude = response['results'][0]['geometry']['location']['lng']
+    
+    #update the collection
+    data.update_one(
+        {"code": code},
+        {
+        "$set": {
+            "address":address,
+            "latitude":latitude,
+            "longitude":longitude
+            }
+        }
+    )
+
+    return "True"
+
 
 @app.route('/report_guide', methods=['GET'])
 def report_guide():
