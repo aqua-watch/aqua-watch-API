@@ -37,7 +37,6 @@ app = Flask(__name__)
 # connect to Google Maps API
 GoogleMaps(app, key='AIzaSyDC7vvV9T9pQBTeXIc-edWfP20tPO-dx0A')
 
-
 """
 # begin code used for login
 login_manager = LoginManager()
@@ -61,8 +60,6 @@ users = db.users
 
 # the user
 user = None
-
-
 
 class User():
 
@@ -158,13 +155,6 @@ def login():
     user_firstName = user_document['name']['givenName']
     user_email = user_document['emails'][0]['value']
     user_image = user_document['image']['url']
-
-
-    print user_displayName
-    print user_firstName
-    print user_lastName
-    print user_email
-    print user_image
 
     # Save credentials back to session in case access token was refreshed.
     # ACTION ITEM: In a production app, you likely want to save these
