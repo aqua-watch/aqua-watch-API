@@ -1,7 +1,7 @@
 {% include "header.html" %}
     
     {% if has_item_code %}
-	<div class="container">
+    <div class="container">
         
         <div class="page-header"> <h2> Your item code: {{item_code}} </h2></div>
         </br>
@@ -21,7 +21,7 @@
         </div>    
         {% endif %}
 
-	</div>
+    </div>
     {% else %}
     <div class="addCode container">
         <div class="page-header">
@@ -41,7 +41,6 @@
             const events = new Events();
             events.yourWaterQuality();
         });
-
     </script>
 {% include "nav.html" %}
 {% include "footer.html" %}
