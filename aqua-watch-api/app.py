@@ -14,12 +14,10 @@ import googleapiclient.discovery
 from flask_googlemaps import GoogleMaps, Map
 from pymongo import MongoClient
 from bson import json_util
-try:
-    from urllib.parse import urlparse
-except ImportError:
-    from urlparse import urlparse
+import urllib.parse, urllib.request
+import json, pprint
 from ast import literal_eval
-from flask_login import LoginManager, UserMixin, login_required, login_user, logout_user
+from math import sqrt
 
 # This variable specifies the name of a file that contains the OAuth 2.0
 # information for this application, including its client_id and client_secret.
@@ -27,7 +25,7 @@ CLIENT_SECRETS_FILE = "client_secret.json"
 
 # This OAuth 2.0 access scope allows for full read/write access to the
 # authenticated user's account and requires requests to use an SSL connection.
-SCOPES = ['profile','email']
+SCOPES = ['profile', 'email']
 API_SERVICE_NAME = 'plus'
 API_VERSION = 'v1'
 
@@ -37,14 +35,8 @@ app = Flask(__name__)
 # connect to Google Maps API
 GoogleMaps(app, key='AIzaSyDC7vvV9T9pQBTeXIc-edWfP20tPO-dx0A')
 
-"""
-# begin code used for login
-login_manager = LoginManager()
-login_manager.init_app(app)
-"""
-
 app.config.update(
-    SECRET_KEY = 'secret_xxx'
+    SECRET_KEY='secret_xxx'
 )
 app.config['SESSION_TYPE'] = 'mongodb'
 
@@ -57,12 +49,26 @@ db = client.leadmap
 data = db.data
 # users collection
 users = db.users
+# testmapping collection
+testmapping = db.testmapping
+
+# units
+units = {"orp": " mV", "tds": " mg/L", "turbidity": " NTU", "conductivity": " uS/cm"}
+# sensor globals
+orp, tds, turbidity, ph, conductivity = 3, 4, 5, 6, 7
+# marker globals
+pink_marker = 'http://maps.google.com/mapfiles/ms/icons/pink-dot.png'
+blue_marker = 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png'
+purple_marker = 'http://maps.google.com/mapfiles/ms/icons/purple-dot.png'
+green_marker = 'http://maps.google.com/mapfiles/ms/icons/green-dot.png'
+yellow_marker = 'http://maps.google.com/mapfiles/ms/icons/yellow-dot.png'
+orange_marker = 'http://maps.google.com/mapfiles/ms/icons/orange-dot.png'
+red_marker = 'http://maps.google.com/mapfiles/ms/icons/red-dot.png'
 
 # the user
 user = None
 
 class User():
-
     def __init__(self, email, first_name, last_name, displayName, product):
         self.email = email
         self.first_name = first_name
@@ -76,42 +82,14 @@ class User():
         return True
 
     def is_anonymous(self):
-        return False 
+        return False
 
     def get_id(self):
         return self.email
 
-"""
-class User(UserMixin):
-    # User class that represents an arbitrary user
-    first_name = None
-    last_name = None
-    email = None
-
-    def __init__(self, email):
-        # initialize class
-        #    :param id: email
-
-        self.email = email
-
-
-@login_manager.user_loader
-def user_loader(email):
-    # to load user
-    user = User(email)
-    return user
-"""
-
 @app.route("/")
 def index():
     # main page
-    """
-    message = "Insert address above to see water quality"
-    if (user):
-        return render_template('index.html', message=message, fname=user.first_name, logged_in=1)
-    else:
-        return render_template('index.html', message=message, not_logged_in=1)
-    """
     message = "Insert address above to see water quality"
 
     if 'credentials' in flask.session:
@@ -131,8 +109,6 @@ def index():
     else:
         return render_template('index.html', message=message, not_logged_in=1)
 
-
-
 # User login with Google account
 @app.route('/login', methods=['GET'])
 def login():
@@ -149,7 +125,6 @@ def login():
     user_resource = SERVICE.people()
     user_document = user_resource.get(userId='me').execute()
 
-
     user_displayName = user_document['displayName']
     user_lastName = user_document['name']['familyName']
     user_firstName = user_document['name']['givenName']
@@ -164,8 +139,6 @@ def login():
     message = "Insert address above to see water quality"
 
     return render_template('index.html', message=message, logged_in=1, fname=user_firstName)
-
-
 
 # Getting authorization from user through Google
 @app.route('/authorize')
@@ -187,10 +160,7 @@ def authorize():
     # Store the state so the callback can verify the auth server response.
     flask.session['state'] = state
 
-
     return flask.redirect(authorization_url)
-
-
 
 @app.route('/gCallback')
 def gCallback():
@@ -214,8 +184,6 @@ def gCallback():
 
     return flask.redirect(flask.url_for('login'))
 
-
-
 # Logout from app, but remained logged in to Google
 # Orginally '/clear' and def clear_credentials()
 @app.route('/logout')
@@ -227,94 +195,32 @@ def logout():
     return render_template('index.html', message=message, not_logged_in=1)
 
 def credentials_to_dict(credentials):
-  return {'token': credentials.token,
-          'refresh_token': credentials.refresh_token,
-          'token_uri': credentials.token_uri,
-          'client_id': credentials.client_id,
-          'client_secret': credentials.client_secret,
-          'scopes': credentials.scopes}
-
-
-
+    return {'token': credentials.token,
+            'refresh_token': credentials.refresh_token,
+            'token_uri': credentials.token_uri,
+            'client_id': credentials.client_id,
+            'client_secret': credentials.client_secret,
+            'scopes': credentials.scopes}
 
 # This will disconnect a user's Google account from the app
 @app.route('/revoke')
 def revoke():
-  if 'credentials' not in flask.session:
-    return ('You need to authorize before revoking credentials.')
+    if 'credentials' not in flask.session:
+        return ('You need to authorize before revoking credentials.')
 
-  credentials = google.oauth2.credentials.Credentials(
-    **flask.session['credentials'])
+    credentials = google.oauth2.credentials.Credentials(
+        **flask.session['credentials'])
 
-  revoke = requests.post('https://accounts.google.com/o/oauth2/revoke',
-      params={'token': credentials.token},
-      headers = {'content-type': 'application/x-www-form-urlencoded'})
+    revoke = requests.post('https://accounts.google.com/o/oauth2/revoke',
+                           params={'token': credentials.token},
+                           headers={'content-type': 'application/x-www-form-urlencoded'})
 
-  status_code = getattr(revoke, 'status_code')
-  if status_code == 200:
-    return ('Credentials successfully revoked')
-  else:
-    return('An error occurred.')
-
-"""
-@app.route('/login_attempt', methods=['POST'])
-def login_attempt():
-    # To handle what happens after user provides email and password
-    global user
-    email = str(request.form.get('email'))
-    password = str(request.form.get('password'))
-    cursor = list(users.find({"email": email}))
-    if (len(cursor) == 0):
-        return render_template('login.html', message="You have to register first")
-    elif (cursor[0]["password"] != password):
-        return render_template('login.html', message="Wrong password")
-    else: # cursor[0]["password"] == password
-        message = "Insert address above to see water quality"
-        fname = cursor[0]["first name"]
-        lname = cursor[0]["last name"]
-        user = user_loader(email)
-        user.first_name = fname
-        user.last_name = lname
-        login_user(user)
-        return render_template('index.html', message=message, fname=fname, logged_in=1)
-
-@app.route('/register', methods=['GET'])
-def register():
-    # For the user to provide personal data
-    return render_template('register.html')
-
-@app.route('/register_attempt', methods=['POST'])
-def register_attempt():
-    # To handle what happens whe user provides personal data
-    email = str(request.form.get('email'))
-    password = str(request.form.get('password'))
-    firstname = str(request.form.get('firstname'))
-    lastname = str(request.form.get('lastname'))
-    cursor = list(users.find({"email": email}))
-    if (len(cursor) == 0):
-        dicts = [{"email": email, "password": password, "first name": firstname, "last name": lastname}]
-        docs = json.dumps(dicts)
-        docs = json_util.loads(docs)
-        users.insert_many(docs)
-        return render_template('register.html', message="Registration successful!")
+    status_code = getattr(revoke, 'status_code')
+    if status_code == 200:
+        return ('Credentials successfully revoked')
     else:
-        return render_template('register.html', message="Already registered!")
+        return ('An error occurred.')
 
-@login_manager.unauthorized_handler
-def unauthorized_handler():
-    # When action requires login
-    return render_template('login.html')
-
-@app.route('/logout', methods=['GET'])
-@login_required
-def logout():
-    # Log out user and update user global
-    global user
-    user = None
-    logout_user()
-    message = "Insert address above to see water quality"
-    return render_template('index.html', message=message, not_logged_in=1)
-"""
 @app.route('/mapview', methods=['POST'])
 def mapview():
     """ View function to display results from an address in the database
@@ -324,42 +230,128 @@ def mapview():
         # obtain input from user
         address = request.form.get('search')
         # make a get http request to geocode api
-        response = requests.get("https://maps.googleapis.com/maps/api/geocode/json?address=" + urllib.parse.quote(address) + "&key=AIzaSyCHdvF13xoB27xgdUQzmylu5mW320-7mjc").content.decode("utf-8")
+        response = requests.get("https://maps.googleapis.com/maps/api/geocode/json?address=" + urllib.parse.quote(
+            address) + "&key=AIzaSyD96hi-erVEjBU2037BUp7gbRkP8xvdzq8").content.decode("utf-8")
         # convert string to list of dictionaries
         response = literal_eval(response)
         # handle invalid address
         if (response['status'] != 'OK'):
             message = "Invalid address. Try again."
             if (user):
-                return render_template('index.html', location=address, message=message, fname=user.first_name, logged_in=1)
+                return render_template('index.html', location=address, message=message, fname=user.first_name,
+                                       logged_in=1)
             else:
                 return render_template('index.html', location=address, message=message, not_logged_in=1)
         # obtain values from response
         address = response['results'][0]['formatted_address']
         latitude = response['results'][0]['geometry']['location']['lat']
         longitude = response['results'][0]['geometry']['location']['lng']
+        lat_range = [latitude - 0.005, latitude + 0.005]
+        lon_range = [longitude - 0.05, longitude + 0.05]
+        cursor = list(testmapping.find({"latitude": {'$gte': lat_range[0]}, "latitude": {'$lte': lat_range[1]},
+                                        "longitude": {'$gte': lon_range[0]}, "longitude": {'$lte': lon_range[1]}}))
         # query
-        cursor = list(data.find({"address": address}))
+        # cursor = list(testmapping.find({"address": address}))
         # results from query
         results = []
+        zero_results = True
         for i in range(len(cursor)):
             current = cursor[i]
             results += [[current['address'], current['latitude'], current['longitude'], current['orp'], current['tds'],
                          current['turbidity'], current['ph'], current['conductivity']]]
+            if (current['address'] == address):
+                zero_results = False
         if (len(results) == 0):
-            message = "No data for this location yet"
+            message = "No data for this location or its surroundings yet"
             if (user):
-                return render_template('index.html', location=address, message=message, fname=user.first_name, logged_in=1)
+                return render_template('index.html', location=address, message=message, fname=user.first_name,
+                                       logged_in=1)
             else:
                 return render_template('index.html', location=address, message=message, not_logged_in=1)
-        else:
+        elif (zero_results):
+            message = "No data for this location yet, but there is some data for its surroundings"
+            map_dict = {}
+            # calculate the average for each sensor
+            if (len(results) > 1):
+                for i in range(len(results)):
+                    if (results[i][0] not in map_dict):
+                        map_dict[results[i][0]] = results[i] + [1]
+                    else:
+                        map_dict[results[i][0]][orp] += results[i][orp]
+                        map_dict[results[i][0]][tds] += results[i][tds]
+                        map_dict[results[i][0]][turbidity] += results[i][turbidity]
+                        map_dict[results[i][0]][ph] += results[i][ph]
+                        map_dict[results[i][0]][conductivity] += results[i][conductivity]
+                        map_dict[results[i][0]][8] += 1
+                for key in map_dict:
+                    map_dict[key][orp] /= map_dict[key][8]
+                    map_dict[key][tds] /= map_dict[key][8]
+                    map_dict[key][turbidity] /= map_dict[key][8]
+                    map_dict[key][ph] /= map_dict[key][8]
+                    map_dict[key][conductivity] /= map_dict[key][8]
+            # create markers
+            data_marker_tuples = []
+            for key in map_dict:
+                data_marker_tuples += [map_dict[key][:-1]]
+            marker_tuples = []
+            for m in data_marker_tuples:
+                marker_tuples += [
+                    (m[1], m[2], None, determine_marker(m[orp], m[tds], m[turbidity], m[ph], m[conductivity]))]
             # create map
-            my_map = Map(identifier="view-side", lat=latitude, lng=longitude, style="height:600px;width:900px;margin:0px;", zoom=16,
-                         markers=[(latitude, longitude, None, 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png')])
+            my_map = Map(identifier="view-side", lat=latitude, lng=longitude,
+                         style="height:600px;width:900px;margin:0px;", zoom=16,
+                         markers=marker_tuples)
             if (user):
-                return render_template('mapview.html', location=address, results=results, mymap=my_map, fname=user.first_name, logged_in=1)
+                return render_template('mapview.html', location=address, message=message, mymap=my_map,
+                                       fname=user.first_name, logged_in=1)
             else:
-                return render_template('mapview.html', location=address, results=results, mymap=my_map, not_logged_in=1)
+                return render_template('mapview.html', location=address, message=message, mymap=my_map, not_logged_in=1)
+        else:
+            map_dict = {}
+            # calculate the average for each sensor
+            if (len(results) > 1):
+                for i in range(len(results)):
+                    if (results[i][0] not in map_dict):
+                        map_dict[results[i][0]] = results[i] + [1]
+                    else:
+                        map_dict[results[i][0]][orp] += results[i][orp]
+                        map_dict[results[i][0]][tds] += results[i][tds]
+                        map_dict[results[i][0]][turbidity] += results[i][turbidity]
+                        map_dict[results[i][0]][ph] += results[i][ph]
+                        map_dict[results[i][0]][conductivity] += results[i][conductivity]
+                        map_dict[results[i][0]][8] += 1
+                for key in map_dict:
+                    map_dict[key][orp] /= map_dict[key][8]
+                    map_dict[key][tds] /= map_dict[key][8]
+                    map_dict[key][turbidity] /= map_dict[key][8]
+                    map_dict[key][ph] /= map_dict[key][8]
+                    map_dict[key][conductivity] /= map_dict[key][8]
+            results = [map_dict[address][:-1]]
+            res_img = determine_marker(results[0][orp], results[0][tds], results[0][turbidity], results[0][ph],
+                                       results[0][conductivity])
+            # add units to results displayed in html page
+            results[0][orp] = str(results[0][orp]) + units["orp"]
+            results[0][tds] = str(results[0][tds]) + units["tds"]
+            results[0][turbidity] = str(results[0][turbidity]) + units["turbidity"]
+            results[0][conductivity] = str(results[0][conductivity]) + units["conductivity"]
+            # create markers
+            data_marker_tuples = []
+            for key in map_dict:
+                data_marker_tuples += [map_dict[key][:-1]]
+            marker_tuples = []
+            for m in data_marker_tuples:
+                marker_tuples += [
+                    (m[1], m[2], None, determine_marker(m[orp], m[tds], m[turbidity], m[ph], m[conductivity]))]
+            # create map
+            my_map = Map(identifier="view-side", lat=latitude, lng=longitude,
+                         style="height:600px;width:900px;margin:0px;", zoom=16,
+                         markers=marker_tuples)
+            if (user):
+                return render_template('mapview.html', location=address, results=results, res_img=res_img, mymap=my_map,
+                                       fname=user.first_name, logged_in=1)
+            else:
+                return render_template('mapview.html', location=address, results=results, res_img=res_img, mymap=my_map,
+                                       not_logged_in=1)
     except:
         message = "Invalid address. Try again."
         if (user):
@@ -367,6 +359,30 @@ def mapview():
         else:
             return render_template('index.html', message=message, not_logged_in=1)
 
+def determine_marker(s1, s2, s3, s4, s5):
+    """ to determine the color of the marker
+    """
+    normalization_denominator = sqrt(s1 ** 2 + s2 ** 2 + s3 ** 2 + s4 ** 2 + s5 ** 2)
+    s1 = abs(s1) / normalization_denominator
+    s2 = abs(s2) / normalization_denominator
+    s3 = abs(s3) / normalization_denominator
+    s4 = abs(s4) / normalization_denominator
+    s5 = abs(s5) / normalization_denominator
+    average_normalized = (s1 + s2 + s3 + s4 + s5) / 5
+    if (average_normalized <= 0.30):
+        return pink_marker
+    elif (average_normalized <= 0.31):
+        return blue_marker
+    elif (average_normalized <= 0.32):
+        return purple_marker
+    elif (average_normalized <= 0.33):
+        return green_marker
+    elif (average_normalized <= 0.34):
+        return yellow_marker
+    elif (average_normalized <= 0.35):
+        return orange_marker
+    else:
+        return red_marker
 
 @app.route('/map', methods=['GET'])
 def map():
@@ -384,32 +400,28 @@ def extract_data():
     # has to be a list of one or more javascript objects
     # for debugging purposes I empty the database before inserting every time this function is called
     # we only have limited storage space
-    #data.remove({})
-    
+    # data.remove({})
+
     cursor = data.find({})
     for document in cursor:
-          print(document)
+        print(document)
 
-    
     # to get data as string
     response = request.get_data().decode("utf-8")
     # don't include .decode("utf-8") if data is json instead of raw
     # convert string to list of dictionaries
     docs = literal_eval(response)
+    # if data is json instead of raw uncomment line below and comment line above
+    # response = json.loads(response)
     docs["address"] = ""
     docs["latitude"] = ""
     docs["longitude"] = ""
-    #docs['item-code'] = ""
-    # if data is json instead of raw uncomment line below and comment line above
-    #response = json.loads(response)
+    # docs['item-code'] = ""
     # convert list of dictionaries to list of javascript objects
     docs = json.dumps([docs])
+    # convert list of javascript objects to MongoDB documents
     docs = json_util.loads(docs)
-    
-    #docs = bson.BSON.encode(docs)
-    #print(docs)
-    #print(type(docs))
-
+    # insert many documents into cloud database
     data.insert_many(docs)
     return "successful"
 
@@ -418,12 +430,12 @@ def your_water_quality():
     """ View function so far used for debugging
     """
     item_code = request.args.get("item-code")
-    
-    if(item_code == "" or item_code is None):   
-        #generate the view so that they can add an item code
+
+    if (item_code == "" or item_code is None):
+        # generate the view so that they can add an item code
         return render_template('your_water_quality.html', has_item_code=0)
     item_code = item_code.strip()
-    cursor = list(data.find({"product-code":item_code}))
+    cursor = list(data.find({"product-code": item_code}))
     # to store results from cursor
     results = cursor[0]
     results = removekey(results, "_id")
@@ -435,16 +447,15 @@ def your_water_quality():
 
     if (user):
         return render_template('your_water_quality.html', item_code=item_code, has_item_code=1,
-         results=results, fname=user.first_name, logged_in=1, has_address= 0)
+                               results=results, fname=user.first_name, logged_in=1, has_address=0)
     else:
         return render_template('your_water_quality.html', item_code=item_code, has_item_code=1,
-         results=results, not_logged_in=1, has_address= 0)
+                               results=results, not_logged_in=1, has_address=0)
 
 def removekey(d, key):
     r = dict(d)
     del r[key]
     return r
-
 
 @app.route('/addAddress', methods=['POST'])
 def add_address():
@@ -455,8 +466,9 @@ def add_address():
     except Exception as e:
         return json.dumps("incorrect request" + str(e))
 
-    #format address and get lat and long
-    response = requests.get("https://maps.googleapis.com/maps/api/geocode/json?address=" + urllib.parse.quote(address) + "&key=AIzaSyCHdvF13xoB27xgdUQzmylu5mW320-7mjc").content.decode("utf-8")
+    # format address and get lat and long
+    response = requests.get("https://maps.googleapis.com/maps/api/geocode/json?address=" + urllib.parse.quote(
+        address) + "&key=AIzaSyCHdvF13xoB27xgdUQzmylu5mW320-7mjc").content.decode("utf-8")
     response = literal_eval(response)
 
     if (response['status'] != 'OK'):
@@ -465,21 +477,20 @@ def add_address():
     address = response['results'][0]['formatted_address']
     latitude = response['results'][0]['geometry']['location']['lat']
     longitude = response['results'][0]['geometry']['location']['lng']
-    
-    #update the collection
+
+    # update the collection
     data.update_one(
         {"code": code},
         {
-        "$set": {
-            "address":address,
-            "latitude":latitude,
-            "longitude":longitude
+            "$set": {
+                "address": address,
+                "latitude": latitude,
+                "longitude": longitude
             }
         }
     )
 
     return "True"
-
 
 @app.route('/report_guide', methods=['GET'])
 def report_guide():

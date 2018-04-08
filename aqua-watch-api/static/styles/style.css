@@ -17,7 +17,7 @@ box-sizing: border-box;
 html, body {
 	line-height: 1;
 	background-color: #FFF;
-	font-family: Verdana;
+	font-family: Verdana, sans-serif;
 	height: 100%;
 }
 
@@ -186,7 +186,7 @@ Side Navigation Menu
     font-size: 25px;
     color: #FFF;
     display: block;
-    transition: 0.3s
+    transition: 0.3s;
     border-top: solid 1px rgba(255, 255, 255, 0.125);
 }
 
@@ -314,7 +314,7 @@ Parallax
 	background-color: transparent;
 	text-align: center;
 	color: #FFF;
-	font-weight: 10;
+	font-weight: 100;
 	min-height: inherit;
 }
 
