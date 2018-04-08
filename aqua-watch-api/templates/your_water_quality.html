@@ -32,8 +32,7 @@
 
 		<a href="{{ url_for('index') }}"><h1>Aqua Watch</h1></a>
 
-	{% if logged_in %}
-		<div class="pull-right">
+        {% if logged_in %}
             <div id="logout-user" style="display:flex;">
                 {% if fname %}
                     <p>Hello, {{ fname }}</p>
@@ -42,16 +41,13 @@
                     <button id="logout" type="submit">Log out</button>
                 </form>
             </div>
-        </div>
         {% endif %}
         {% if not_logged_in %}
-        <div class="pull-right">
             <div id="login-register" style="display:flex;">
                 <form method="get" action="{{ url_for('login') }}">
                     <button id="login" type="submit">Log in</button>
                 </form>
             </div>
-        </div>
         {% endif %}
 	</header>
 

@@ -386,8 +386,19 @@ def determine_marker(s1, s2, s3, s4, s5):
 
 @app.route('/map', methods=['GET'])
 def map():
-    if (user):
-        return render_template('map.html', fname=user.first_name, logged_in=1)
+    if 'credentials' in flask.session:
+        # Temporary fix for user_firstName not found error, but should be fixed with database
+        # Load credentials from the session.
+        credentials = google.oauth2.credentials.Credentials(
+            **flask.session['credentials'])
+
+        SERVICE = googleapiclient.discovery.build(
+            API_SERVICE_NAME, API_VERSION, credentials=credentials)
+
+        user_resource = SERVICE.people()
+        user_document = user_resource.get(userId='me').execute()
+        user_firstName = user_document['name']['givenName']
+        return render_template('map.html', fname=user_firstName, logged_in=1)
     else:
         return render_template('map.html', not_logged_in=1)
 
@@ -445,9 +456,20 @@ def your_water_quality():
     else:
         has_address = 1
 
-    if (user):
+    if 'credentials' in flask.session:
+        # Temporary fix for user_firstName not found error, but should be fixed with database
+        # Load credentials from the session.
+        credentials = google.oauth2.credentials.Credentials(
+            **flask.session['credentials'])
+
+        SERVICE = googleapiclient.discovery.build(
+            API_SERVICE_NAME, API_VERSION, credentials=credentials)
+
+        user_resource = SERVICE.people()
+        user_document = user_resource.get(userId='me').execute()
+        user_firstName = user_document['name']['givenName']
         return render_template('your_water_quality.html', item_code=item_code, has_item_code=1,
-                               results=results, fname=user.first_name, logged_in=1, has_address=0)
+                               results=results, fname=user_firstName, logged_in=1, has_address=0)
     else:
         return render_template('your_water_quality.html', item_code=item_code, has_item_code=1,
                                results=results, not_logged_in=1, has_address=0)
@@ -494,8 +516,19 @@ def add_address():
 
 @app.route('/report_guide', methods=['GET'])
 def report_guide():
-    if (user):
-        return render_template('report_guide.html', fname=user.first_name, logged_in=1)
+    if 'credentials' in flask.session:
+        # Temporary fix for user_firstName not found error, but should be fixed with database
+        # Load credentials from the session.
+        credentials = google.oauth2.credentials.Credentials(
+            **flask.session['credentials'])
+
+        SERVICE = googleapiclient.discovery.build(
+            API_SERVICE_NAME, API_VERSION, credentials=credentials)
+
+        user_resource = SERVICE.people()
+        user_document = user_resource.get(userId='me').execute()
+        user_firstName = user_document['name']['givenName']
+        return render_template('report_guide.html', fname=user_firstName, logged_in=1)
     else:
         return render_template('report_guide.html', not_logged_in=1)
 
