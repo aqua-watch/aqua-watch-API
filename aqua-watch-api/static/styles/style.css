@@ -43,27 +43,31 @@ Header
 ********************************************/
 
 
-
-
-
 header {
-	background-color: #FFF;
-	padding: 20px;
-	display: flex;
+    background-color: #FFF;
+    padding: 20px;
+    /*display: flex;
     flex-direction: row;
-    justify-content: space-between;
+    justify-content: space-between;*/
     text-align: center;
-	width: 100%;
+    width: 100%;
     height: 125px;
-	z-index: 10;
+    z-index: 10;
 }
 
+
 header h1 {
-	background-color: #FFF;
-	text-align: center;
-	font-size: 4em;
-	color: #1E90FF;
-	display: inline-block;
+    text-align: center;
+    font-size: 4em;
+    color: #1E90FF;
+    display: inline-block;
+}
+
+.header_center {
+    display: inline-block;
+    margin: 0 auto;
+    width: 500px;
+    height: 85px;
 }
 
 .header_homepage {
@@ -71,18 +75,12 @@ header h1 {
 }
 
 .header_subpage {
-    box-shadow: 0 1px 10px 1px #303030;
+    box-shadow: 0 0px 5px 0px #303030;
 }
 
-#login-register {
-    flex-direction: row;
-    justify-content: space-around;
-    align-items: center;
-    width: 185px;
-}
 
-#login {
-    display: inline-block;
+#logs {
+    float: right;
     margin: 2px;
     padding: 8px;
     background-color: #1E90FF;
@@ -91,69 +89,30 @@ header h1 {
     border: none;
     border-radius: 10px;
     cursor: pointer;
+
 }
 
-#register {
-    display: inline-block;
-    margin: 2px;
-    padding: 8px;
-    background-color: #1E90FF;
-    font-size: 20px;
-    color: #FFF;
-    border: none;
-    border-radius: 10px;
-    cursor: pointer;
+#logs button:hover{
+  background-color: #1871c9;
 }
-
-#login-register button:hover{
-    background-color: #1871c9;
-}
-
-#logout-user {
-    flex-direction: row;
-    justify-content: space-around;
-    align-items: center;
-    width: 200px;
-}
-
-#logout-user p {
-    margin: 5px;
-}
-
-#logout {
-    display: inline-block;
-    margin: 2px;
-    padding: 8px;
-    background-color: #1E90FF;
-    font-size: 20px;
-    color: #FFF;
-    border: none;
-    border-radius: 10px;
-    cursor: pointer;
-}
-
-#logout-user button:hover{
-    background-color: #1871c9;
-}
-
 
 /*******************************************
 ********************************************
 Side Navigation Menu
 ********************************************
 ********************************************/
-
-
-
-
-
-
+.menu {
+    float: left;
+    height: 85px;
+    width: 150px;
+    padding-top: 20px;
+}
 
 .menu a {
 	font-size: 2em;
     color: #1E90FF;
     float: left;
-    margin-top: 15px;
+
 }
 
 .menu a:hover, .offcanvas a:focus{
@@ -222,16 +181,30 @@ Containers
 ********************************************
 ********************************************/
 
-
-
-
-
-
 .container_main {
 	width: 100%;
 	display: inline-block;
 	text-align: center;
 	top: 0;
+}
+
+#container_login {
+    float: right;
+    padding-top: 20px;
+    height: 85px;
+    width: 150px;
+}
+
+#container_logout {
+    float: right;
+    height: 85px;
+    width: 150px;
+}
+
+#container_logout h2 {
+    font-size: 1em;
+    color: #1E90FF;
+    margin-bottom: 5px;
 }
 
 .container_subpage_heading {
@@ -254,6 +227,7 @@ Containers
 
 .container_content h2 {
 	font-size: 2em;
+    color: #1E90FF;
 }
 
 .search_container {
@@ -342,8 +316,7 @@ Footer
 footer {
 	background-color: #202020;
 	height: 150px;
-	padding-top: 30px;
-	padding-bottom: 50px;
+	padding: 50px;
     margin-top: 100px;
 }
 
@@ -351,9 +324,5 @@ footer {
 	text-align: center;
 	color: #707070;
 }
-/*******************************************
-********************************************
-Your water quality page
-********************************************
-********************************************/
+
 

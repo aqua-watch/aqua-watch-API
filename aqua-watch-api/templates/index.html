@@ -6,13 +6,12 @@
 	<title>Aqua Watch</title>
 
     <!-- CSS -->
-    <link rel= "stylesheet" type= "text/css" href= "../static/styles/style.css">
-    <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/style.css') }}">
+    <link rel= "stylesheet" type= "text/css" href= "../static/styles/style.css?version=1">
+    <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/style.css', v=0.01) }}">
 
     <!-- JS -->
     <script type="text/javascript" src="../static/js/jquery-3.3.1.min.js"></script>
     <script type="text/javascript" src="../static/js/script.js"></script>
-
 </head>
 
 <body>
@@ -21,36 +20,35 @@
 				<a href="#">
 					<span onclick="openNav()">&#9776; Menu</span>
 				</a>
-			</div>
-		</div>
+        </div>
 
-		<a href="{{ url_for('index') }}"><h1>Aqua Watch</h1></a>
+        <div class="header_center">
+		    <a href="{{ url_for('index') }}"><h1>Aqua Watch</h1></a>
+        </div>
 
         {% if logged_in %}
-            <div id="logout-user" style="display:flex;">
+            <div id="container_logout">
                 {% if fname %}
-                    <p>Hello, {{ fname }}</p>
+                    <h2>Hello, {{ fname }}</h2>
                 {% endif %}
                 <form method="get" action="{{ url_for('logout') }}">
-                    <button id="logout" type="submit">Log out</button>
+                    <button id="logs" type="submit">Log out</button>
                 </form>
             </div>
         {% endif %}
         {% if not_logged_in %}
-            <div id="login-register" style="display:flex;">
+            <div id="container_login">
                 <form method="get" action="{{ url_for('login') }}">
-                    <button id="login" type="submit">Log in</button>
+                    <button id="logs" type="submit">Log in</button>
                 </form>
             </div>
         {% endif %}
-
 	</header>
 
 	<!-- Side Navigation: appears when opened -->
 	<div id="mySidenav" class="sidenav">
         <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
-        <a href="{{ url_for('index') }}" class="active">Home</a><hr>
-        <a href="{{ url_for('map') }}">Search by Map</a><hr>
+        <a href="{{ url_for('index') }}" class="active">Home | Search</a><hr>
         <a href="{{ url_for('your_water_quality') }}">Your Water Quality</a><hr>
         <a href="{{ url_for('report_guide') }}">Understanding the Report</a><hr>
 	</div>
@@ -61,7 +59,7 @@
 			<br>
 			<div class="search_container">
                 <form method="post" action="{{ url_for('mapview') }}">
-				    <input type="text" placeholder="Example: 111 Cummington Mall Boston USA" name="search">
+				    <input type="text" placeholder="Search by address" name="search">
   				    <button type="submit">Search</button>
                 </form>
   			</div>
@@ -69,17 +67,6 @@
 	</div>
 
 	<div class="container_content">
-
-        {% if location %}
-            <h2>{{ location }}</h2>
-        {% endif %}
-
-        </br>
-
-        {% if message %}
-            <h2>{{ message }}</h2>
-        {% endif %}
-
 	</div>
 
 	<footer>

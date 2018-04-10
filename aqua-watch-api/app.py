@@ -42,6 +42,7 @@ app.config['SESSION_TYPE'] = 'mongodb'
 
 # connect to cloud Mongo database (MongoDB Atlas)
 client = MongoClient("mongodb+srv://AquaWatch:I3WjjOcRO0tdLdAQ@aquawatch-pdkfe.mongodb.net/test")
+
 # select database
 db = client.leadmap
 # select collections
@@ -69,11 +70,11 @@ red_marker = 'http://maps.google.com/mapfiles/ms/icons/red-dot.png'
 user = None
 
 class User():
-    def __init__(self, email, first_name, last_name, displayName, product):
+    def __init__(self, email, first_name, last_name, products=[]):
         self.email = email
         self.first_name = first_name
         self.last_name = last_name
-        self.displayName = displayName
+        self.products = products
 
     def is_authenticated(self):
         return True
@@ -90,24 +91,10 @@ class User():
 @app.route("/")
 def index():
     # main page
-    message = "Insert address above to see water quality"
-
-    if 'credentials' in flask.session:
-
-        # Temporary fix for user_firstName not found error, but should be fixed with database
-        # Load credentials from the session.
-        credentials = google.oauth2.credentials.Credentials(
-            **flask.session['credentials'])
-
-        SERVICE = googleapiclient.discovery.build(
-            API_SERVICE_NAME, API_VERSION, credentials=credentials)
-
-        user_resource = SERVICE.people()
-        user_document = user_resource.get(userId='me').execute()
-        user_firstName = user_document['name']['givenName']
-        return render_template('index.html', message=message, logged_in=1, fname=user_firstName)
+    if (user):
+        return render_template('index.html', logged_in=1, fname=user.first_name)
     else:
-        return render_template('index.html', message=message, not_logged_in=1)
+        return render_template('index.html', not_logged_in=1)
 
 # User login with Google account
 @app.route('/login', methods=['GET'])
@@ -125,20 +112,33 @@ def login():
     user_resource = SERVICE.people()
     user_document = user_resource.get(userId='me').execute()
 
-    user_displayName = user_document['displayName']
-    user_lastName = user_document['name']['familyName']
-    user_firstName = user_document['name']['givenName']
-    user_email = user_document['emails'][0]['value']
-    user_image = user_document['image']['url']
+    email = user_document['emails'][0]['value']
+    lastName = user_document['name']['familyName']
+    firstName = user_document['name']['givenName']
+
+    """
+    if users.find({'_id': email }).count() == 0:
+        lastName = user_document['name']['familyName']
+        firstName = user_document['name']['givenName']
+        users.insert_one(
+            {
+            '_id': email,
+            'first_name': firstName,
+            'last_name': lastName,
+            'products': '',
+            })
+    """
+
+    # image = user_document['image']['url']
+
+    user = User(email, firstName, lastName)
 
     # Save credentials back to session in case access token was refreshed.
     # ACTION ITEM: In a production app, you likely want to save these
     #              credentials in a persistent database instead.
     flask.session['credentials'] = credentials_to_dict(credentials)
 
-    message = "Insert address above to see water quality"
-
-    return render_template('index.html', message=message, logged_in=1, fname=user_firstName)
+    return render_template('index.html', logged_in=1, fname=user.first_name)
 
 # Getting authorization from user through Google
 @app.route('/authorize')
@@ -190,9 +190,9 @@ def gCallback():
 def logout():
     if 'credentials' in flask.session:
         del flask.session['credentials']
-    message = "Insert address above to see water quality"
+        user = None
 
-    return render_template('index.html', message=message, not_logged_in=1)
+    return render_template('index.html', not_logged_in=1)
 
 def credentials_to_dict(credentials):
     return {'token': credentials.token,
@@ -220,6 +220,7 @@ def revoke():
         return ('Credentials successfully revoked')
     else:
         return ('An error occurred.')
+
 
 @app.route('/mapview', methods=['POST'])
 def mapview():
@@ -386,19 +387,8 @@ def determine_marker(s1, s2, s3, s4, s5):
 
 @app.route('/map', methods=['GET'])
 def map():
-    if 'credentials' in flask.session:
-        # Temporary fix for user_firstName not found error, but should be fixed with database
-        # Load credentials from the session.
-        credentials = google.oauth2.credentials.Credentials(
-            **flask.session['credentials'])
-
-        SERVICE = googleapiclient.discovery.build(
-            API_SERVICE_NAME, API_VERSION, credentials=credentials)
-
-        user_resource = SERVICE.people()
-        user_document = user_resource.get(userId='me').execute()
-        user_firstName = user_document['name']['givenName']
-        return render_template('map.html', fname=user_firstName, logged_in=1)
+    if (user):
+        return render_template('map.html', fname=user.first_name, logged_in=1)
     else:
         return render_template('map.html', not_logged_in=1)
 
@@ -456,20 +446,9 @@ def your_water_quality():
     else:
         has_address = 1
 
-    if 'credentials' in flask.session:
-        # Temporary fix for user_firstName not found error, but should be fixed with database
-        # Load credentials from the session.
-        credentials = google.oauth2.credentials.Credentials(
-            **flask.session['credentials'])
-
-        SERVICE = googleapiclient.discovery.build(
-            API_SERVICE_NAME, API_VERSION, credentials=credentials)
-
-        user_resource = SERVICE.people()
-        user_document = user_resource.get(userId='me').execute()
-        user_firstName = user_document['name']['givenName']
+    if (user):
         return render_template('your_water_quality.html', item_code=item_code, has_item_code=1,
-                               results=results, fname=user_firstName, logged_in=1, has_address=0)
+                               results=results, fname=user.first_name, logged_in=1, has_address=0)
     else:
         return render_template('your_water_quality.html', item_code=item_code, has_item_code=1,
                                results=results, not_logged_in=1, has_address=0)
@@ -516,19 +495,8 @@ def add_address():
 
 @app.route('/report_guide', methods=['GET'])
 def report_guide():
-    if 'credentials' in flask.session:
-        # Temporary fix for user_firstName not found error, but should be fixed with database
-        # Load credentials from the session.
-        credentials = google.oauth2.credentials.Credentials(
-            **flask.session['credentials'])
-
-        SERVICE = googleapiclient.discovery.build(
-            API_SERVICE_NAME, API_VERSION, credentials=credentials)
-
-        user_resource = SERVICE.people()
-        user_document = user_resource.get(userId='me').execute()
-        user_firstName = user_document['name']['givenName']
-        return render_template('report_guide.html', fname=user_firstName, logged_in=1)
+    if (user):
+        return render_template('report_guide.html', fname=user.first_name, logged_in=1)
     else:
         return render_template('report_guide.html', not_logged_in=1)
 

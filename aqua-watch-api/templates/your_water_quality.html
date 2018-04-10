@@ -8,90 +8,86 @@
     <!-- CSS -->
     <link rel= "stylesheet" type= "text/css" href= "../static/styles/style.css">
     <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/style.css') }}">
-    <!-- Latest compiled and minified CSS -->
+
+    <!-- Latest compiled and minified CSS 
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    -->
 
     <!-- JS -->
     <script type="text/javascript" src="../static/js/script.js"></script>
+    <!--
     <script
 	  src="https://code.jquery.com/jquery-3.3.1.min.js"
 	  integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
 	  crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
-
+    -->
 </head>
 
 <body>
 	<header class="header_subpage">
-		<div class="menu">
-				<a href="#">
-					<span onclick="openNav()">&#9776; Menu</span>
-				</a>
-			</div>
-		</div>
+        <div class="menu">
+                <a href="#">
+                    <span onclick="openNav()">&#9776; Menu</span>
+                </a>
+        </div>
 
-		<a href="{{ url_for('index') }}"><h1>Aqua Watch</h1></a>
+        <div class="header_center">
+            <a href="{{ url_for('index') }}"><h1>Aqua Watch</h1></a>
+        </div>
 
         {% if logged_in %}
-            <div id="logout-user" style="display:flex;">
+            <div id="container_logout">
                 {% if fname %}
-                    <p>Hello, {{ fname }}</p>
+                    <h2>Hello, {{ fname }}</h2>
                 {% endif %}
                 <form method="get" action="{{ url_for('logout') }}">
-                    <button id="logout" type="submit">Log out</button>
+                    <button id="logs" type="submit">Log out</button>
                 </form>
             </div>
         {% endif %}
         {% if not_logged_in %}
-            <div id="login-register" style="display:flex;">
+            <div id="container_login">
                 <form method="get" action="{{ url_for('login') }}">
-                    <button id="login" type="submit">Log in</button>
+                    <button id="logs" type="submit">Log in</button>
                 </form>
             </div>
         {% endif %}
-	</header>
+    </header>
 
     <!-- Side Navigation: appears when opened -->
 	<div id="mySidenav" class="sidenav">
         <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
-        <a href="{{ url_for('index') }}">Home</a><hr>
-        <a href="{{ url_for('map') }}">Search by Map</a><hr>
+        <a href="{{ url_for('index') }}">Home | Search</a><hr>
         <a href="{{ url_for('your_water_quality') }}" class="active">Your Water Quality</a><hr>
         <a href="{{ url_for('report_guide') }}">Understanding the Report</a><hr>
 	</div>
     
-    {% if has_item_code %}
-    <div class="container">
-        
+    <div class="container_content">
+        {% if has_item_code %}
         <div class="page-header"> <h2> Your item code: {{item_code}} </h2></div>
         </br>
         <ul>
         {% for key, value in results.items() %} 
-            <h4><li><b>{{key}}</b>: {{value}}</li></h4>
+            <h3><li><b>{{key}}</b>: {{value}}</li></h3>
         {% endfor %}
         </ul>
 
         {% if not has_address %}
-        <div class="add-address">
-            <h4> Add/Update an address associated with your product </h4>
+            <h2> Add/Update an address associated with your product </h2>
             <label for="address"> Address: </label>
             <input type="text" name="address" id="address">
 
-            <button class="btn tbn-primary" id="add-address">Add Address</button>
-        </div>    
+            <button class="btn tbn-primary" id="add-address">Add Address</button> 
         {% endif %}
 
+        {% else %}
+            <h2>You need to add your item code</h2>
+            <input type="text" name="item-code" id="item-code">
+            <button type="button" class="btn btn-primary" id="submit-item-code">Add Code</button>
+        {% endif %}
     </div>
-    {% else %}
-    <div class="addCode container">
-        <div class="page-header">
-            <h3>You need to add your item code</h3>
-        </div>
-        <input type="text" name="item-code" id="item-code">
-        <button type="button" class="btn btn-primary" id="submit-item-code">Add Code</button>
-    </div>
-
-    {% endif %}
+    
     <script src= "{{ url_for('static',filename='js/events.js') }}"></script>
     <script >
     $(document).ready(function(){

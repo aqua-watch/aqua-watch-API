@@ -16,35 +16,35 @@
 </head>
 
 <body>
-	<header class="header_homepage">
-		<div class="menu">
-				<a href="#">
-					<span onclick="openNav()">&#9776; Menu</span>
-				</a>
-			</div>
-		</div>
+	<header class="header_subpage">
+        <div class="menu">
+                <a href="#">
+                    <span onclick="openNav()">&#9776; Menu</span>
+                </a>
+        </div>
 
-		<a href="{{ url_for('index') }}"><h1>Aqua Watch</h1></a>
+        <div class="header_center">
+            <a href="{{ url_for('index') }}"><h1>Aqua Watch</h1></a>
+        </div>
 
         {% if logged_in %}
-            <div id="logout-user" style="display:flex;">
+            <div id="container_logout">
                 {% if fname %}
-                    <p>Hello, {{ fname }}</p>
+                    <h2>Hello, {{ fname }}</h2>
                 {% endif %}
                 <form method="get" action="{{ url_for('logout') }}">
-                    <button id="logout" type="submit">Log out</button>
+                    <button id="logs" type="submit">Log out</button>
                 </form>
             </div>
         {% endif %}
         {% if not_logged_in %}
-            <div id="login-register" style="display:flex;">
+            <div id="container_login">
                 <form method="get" action="{{ url_for('login') }}">
-                    <button id="login" type="submit">Log in</button>
+                    <button id="logs" type="submit">Log in</button>
                 </form>
             </div>
         {% endif %}
-
-	</header>
+    </header>
 
 	<!-- Side Navigation: appears when opened -->
 	<div id="mySidenav" class="sidenav">
@@ -59,12 +59,46 @@
 		<h2>Search by Map</h2>
 		<br>
 		<div class="search_container">
-			<input type="text" placeholder="Search by address, city, or zipcode" name="search">
-			<button type="submit">Search</button>
+			<form method="post" action="{{ url_for('map') }}">
+			    <input type="text" placeholder="Search by address" name="search">
+				<button type="submit">Search</button>
+            </form>
 		</div>
 	</div>
 
-	<div id="map"></div>
+	<div class="container_content">
+
+        {% if location %}
+            <h2>{{ location }}</h2>
+        {% endif %}
+
+        </br>
+
+        {% if message %}
+            <h2>{{ message }}</h2>
+        {% endif %}
+
+        </br>
+
+        {% if results %}
+            {% for result in results %}
+                <img src="http://maps.google.com/mapfiles/ms/icons/blue-dot.png" />
+                <p>Location: {{result[0]}}</p>
+                <p>Latitude: {{result[1]}}</p>
+                <p>Longitude: {{result[2]}}</p>
+                <p>Oxidation-Reduction-Potential: {{result[3]}}</p>
+                <p>Total Dissolved Solids: {{result[4]}}</p>
+                <p>Turbidity: {{result[5]}}</p>
+                <p>ph: {{result[6]}}</p>
+                <p>Conductivity: {{result[7]}}</p>
+                </br>
+            {% endfor %}
+        {% endif %}
+
+	</div>
+
+    <div id="map"></div>
+
 
 	<footer>
 		<div class="footer_text">
