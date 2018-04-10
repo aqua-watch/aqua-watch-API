@@ -58,12 +58,8 @@ units = {"orp": " mV", "tds": " mg/L", "turbidity": " NTU", "conductivity": " uS
 # sensor globals
 orp, tds, turbidity, ph, conductivity = 3, 4, 5, 6, 7
 # marker globals
-pink_marker = 'http://maps.google.com/mapfiles/ms/icons/pink-dot.png'
-blue_marker = 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png'
-purple_marker = 'http://maps.google.com/mapfiles/ms/icons/purple-dot.png'
 green_marker = 'http://maps.google.com/mapfiles/ms/icons/green-dot.png'
 yellow_marker = 'http://maps.google.com/mapfiles/ms/icons/yellow-dot.png'
-orange_marker = 'http://maps.google.com/mapfiles/ms/icons/orange-dot.png'
 red_marker = 'http://maps.google.com/mapfiles/ms/icons/red-dot.png'
 
 # the user
@@ -249,8 +245,8 @@ def mapview():
         longitude = response['results'][0]['geometry']['location']['lng']
         lat_range = [latitude - 0.005, latitude + 0.005]
         lon_range = [longitude - 0.05, longitude + 0.05]
-        cursor = list(testmapping.find({"latitude": {'$gte': lat_range[0]}, "latitude": {'$lte': lat_range[1]},
-                                        "longitude": {'$gte': lon_range[0]}, "longitude": {'$lte': lon_range[1]}}))
+        cursor = list(testmapping.find({'$and': [{"latitude": {'$gte': lat_range[0]}}, {"latitude": {'$lte': lat_range[1]}},
+                                         {"longitude": {'$gte': lon_range[0]}}, {"longitude": {'$lte': lon_range[1]}}]}))
         # query
         # cursor = list(testmapping.find({"address": address}))
         # results from query
@@ -370,18 +366,10 @@ def determine_marker(s1, s2, s3, s4, s5):
     s4 = abs(s4) / normalization_denominator
     s5 = abs(s5) / normalization_denominator
     average_normalized = (s1 + s2 + s3 + s4 + s5) / 5
-    if (average_normalized <= 0.30):
-        return pink_marker
-    elif (average_normalized <= 0.31):
-        return blue_marker
-    elif (average_normalized <= 0.32):
-        return purple_marker
-    elif (average_normalized <= 0.33):
+    if (average_normalized <= 0.32):
         return green_marker
     elif (average_normalized <= 0.34):
         return yellow_marker
-    elif (average_normalized <= 0.35):
-        return orange_marker
     else:
         return red_marker
 
