@@ -63,7 +63,7 @@ yellow_marker = 'http://maps.google.com/mapfiles/ms/icons/yellow-dot.png'
 red_marker = 'http://maps.google.com/mapfiles/ms/icons/red-dot.png'
 
 # the user
-user = None
+user = {'fname': None}
 
 class User():
     def __init__(self, email, first_name, last_name, products=[]):
@@ -87,10 +87,10 @@ class User():
 @app.route("/")
 def index():
     # main page
-    if (user):
-        return render_template('index.html', logged_in=1, fname=user.first_name)
-    else:
+    if user['fname'] == None:
         return render_template('index.html', not_logged_in=1)
+    else:
+        return render_template('index.html', logged_in=1, fname=user['fname'])
 
 # User login with Google account
 @app.route('/login', methods=['GET'])
@@ -127,14 +127,14 @@ def login():
 
     # image = user_document['image']['url']
 
-    user = User(email, firstName, lastName)
+    user['fname'] = firstName
 
     # Save credentials back to session in case access token was refreshed.
     # ACTION ITEM: In a production app, you likely want to save these
     #              credentials in a persistent database instead.
     flask.session['credentials'] = credentials_to_dict(credentials)
 
-    return render_template('index.html', logged_in=1, fname=user.first_name)
+    return render_template('index.html', logged_in=1, fname=user['fname'])
 
 # Getting authorization from user through Google
 @app.route('/authorize')
@@ -186,7 +186,7 @@ def gCallback():
 def logout():
     if 'credentials' in flask.session:
         del flask.session['credentials']
-        user = None
+        user['fname'] = None
 
     return render_template('index.html', not_logged_in=1)
 
@@ -234,11 +234,11 @@ def mapview():
         # handle invalid address
         if (response['status'] != 'OK'):
             message = "Invalid address. Try again."
-            if (user):
-                return render_template('index.html', location=address, message=message, fname=user.first_name,
-                                       logged_in=1)
-            else:
+            if user['fname'] == None:
                 return render_template('index.html', location=address, message=message, not_logged_in=1)
+            else:
+                return render_template('index.html', location=address, message=message, fname=user['fname'],
+                                       logged_in=1)
         # obtain values from response
         address = response['results'][0]['formatted_address']
         latitude = response['results'][0]['geometry']['location']['lat']
@@ -260,11 +260,11 @@ def mapview():
                 zero_results = False
         if (len(results) == 0):
             message = "No data for this location or its surroundings yet"
-            if (user):
-                return render_template('index.html', location=address, message=message, fname=user.first_name,
-                                       logged_in=1)
-            else:
+            if user['fname'] ==None:
                 return render_template('index.html', location=address, message=message, not_logged_in=1)
+            else:
+                return render_template('index.html', location=address, message=message, fname=user['fname'],
+                                       logged_in=1)
         elif (zero_results):
             message = "No data for this location yet, but there is some data for its surroundings"
             map_dict = {}
@@ -298,11 +298,11 @@ def mapview():
             my_map = Map(identifier="view-side", lat=latitude, lng=longitude,
                          style="height:600px;width:900px;margin:0px;", zoom=16,
                          markers=marker_tuples)
-            if (user):
-                return render_template('mapview.html', location=address, message=message, mymap=my_map,
-                                       fname=user.first_name, logged_in=1)
-            else:
+            if user['fname']==None:
                 return render_template('mapview.html', location=address, message=message, mymap=my_map, not_logged_in=1)
+            else:
+                return render_template('mapview.html', location=address, message=message, mymap=my_map,
+                                       fname=user['fname'], logged_in=1)
         else:
             map_dict = {}
             # calculate the average for each sensor
@@ -343,18 +343,18 @@ def mapview():
             my_map = Map(identifier="view-side", lat=latitude, lng=longitude,
                          style="height:600px;width:900px;margin:0px;", zoom=16,
                          markers=marker_tuples)
-            if (user):
-                return render_template('mapview.html', location=address, results=results, res_img=res_img, mymap=my_map,
-                                       fname=user.first_name, logged_in=1)
-            else:
+            if user['fname'] == None:
                 return render_template('mapview.html', location=address, results=results, res_img=res_img, mymap=my_map,
                                        not_logged_in=1)
+            else:
+                return render_template('mapview.html', location=address, results=results, res_img=res_img, mymap=my_map,
+                                       fname=user['fname'], logged_in=1)
     except:
         message = "Invalid address. Try again."
-        if (user):
-            return render_template('index.html', message=message, fname=user.first_name, logged_in=1)
-        else:
+        if user['fname'] == None:
             return render_template('index.html', message=message, not_logged_in=1)
+        else:
+            return render_template('index.html', message=message, fname=user['fname'], logged_in=1)
 
 def determine_marker(s1, s2, s3, s4, s5):
     """ to determine the color of the marker
@@ -373,12 +373,6 @@ def determine_marker(s1, s2, s3, s4, s5):
     else:
         return red_marker
 
-@app.route('/map', methods=['GET'])
-def map():
-    if (user):
-        return render_template('map.html', fname=user.first_name, logged_in=1)
-    else:
-        return render_template('map.html', not_logged_in=1)
 
 @app.route('/sensors', methods=['POST'])
 def extract_data():
@@ -418,28 +412,28 @@ def extract_data():
 def your_water_quality():
     """ View function so far used for debugging
     """
-    item_code = request.args.get("item-code")
-
-    if (item_code == "" or item_code is None):
-        # generate the view so that they can add an item code
-        return render_template('your_water_quality.html', has_item_code=0)
-    item_code = item_code.strip()
-    cursor = list(data.find({"product-code": item_code}))
-    # to store results from cursor
-    results = cursor[0]
-    results = removekey(results, "_id")
-
-    if results["address"] == "" or results["address"] == None:
-        has_address = 0
+    if user['fname'] == None:
+        return render_template('your_water_quality.html', not_logged_in=1)
+    
     else:
-        has_address = 1
+        item_code = request.args.get("item-code")
 
-    if (user):
-        return render_template('your_water_quality.html', item_code=item_code, has_item_code=1,
-                               results=results, fname=user.first_name, logged_in=1, has_address=0)
-    else:
-        return render_template('your_water_quality.html', item_code=item_code, has_item_code=1,
-                               results=results, not_logged_in=1, has_address=0)
+        if (item_code == "" or item_code is None):
+            # generate the view so that they can add an item code
+            return render_template('your_water_quality.html', no_item_code=1, fname=user['fname'], logged_in=1)
+        
+        item_code = item_code.strip()
+        cursor = list(data.find({"product-code": item_code}))
+        # to store results from cursor
+        results = cursor[0]
+        results = removekey(results, "_id")
+
+        if results["address"] == "" or results["address"] == None:
+            return render_template('your_water_quality.html', fname=user['fname'], item_code=item_code, has_item_code=1,
+                               results=results, logged_in=1, no_address=1)
+        else:
+            return render_template('your_water_quality.html', fname=user['fname'], item_code=item_code, has_item_code=1,
+                               results=results, logged_in=1, has_address=1)
 
 def removekey(d, key):
     r = dict(d)
@@ -483,10 +477,10 @@ def add_address():
 
 @app.route('/report_guide', methods=['GET'])
 def report_guide():
-    if (user):
-        return render_template('report_guide.html', fname=user.first_name, logged_in=1)
-    else:
+    if user['fname']==None:
         return render_template('report_guide.html', not_logged_in=1)
+    else:
+        return render_template('report_guide.html', fname=user['fname'], logged_in=1)
 
 if __name__ == "__main__":
     # When running locally, disable OAuthlib's HTTPs verification.

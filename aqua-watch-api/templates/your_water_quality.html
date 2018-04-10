@@ -6,22 +6,12 @@
 	<title>Aqua Watch | Your Water Quality</title>
 
     <!-- CSS -->
-    <link rel= "stylesheet" type= "text/css" href= "../static/styles/style.css">
-    <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/style.css') }}">
-
-    <!-- Latest compiled and minified CSS 
-	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
-    -->
+    <link rel= "stylesheet" type= "text/css" href= "../static/styles/style.css?version=1">
+    <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/style.css', v=0.01) }}">
 
     <!-- JS -->
+    <script type="text/javascript" src="../static/js/jquery-3.3.1.min.js"></script>
     <script type="text/javascript" src="../static/js/script.js"></script>
-    <!--
-    <script
-	  src="https://code.jquery.com/jquery-3.3.1.min.js"
-	  integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
-	  crossorigin="anonymous"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
-    -->
 </head>
 
 <body>
@@ -64,6 +54,11 @@
 	</div>
     
     <div class="container_content">
+        {% if not_logged_in %}
+            <h2>You need to be logged in to view your water quality.</h2>
+            <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+        {% endif %}
+
         {% if has_item_code %}
         <div class="page-header"> <h2> Your item code: {{item_code}} </h2></div>
         </br>
@@ -72,8 +67,9 @@
             <h3><li><b>{{key}}</b>: {{value}}</li></h3>
         {% endfor %}
         </ul>
+        {% endif %}
 
-        {% if not has_address %}
+        {% if no_address %}
             <h2> Add/Update an address associated with your product </h2>
             <label for="address"> Address: </label>
             <input type="text" name="address" id="address">
@@ -81,15 +77,19 @@
             <button class="btn tbn-primary" id="add-address">Add Address</button> 
         {% endif %}
 
-        {% else %}
-            <h2>You need to add your item code</h2>
-            <input type="text" name="item-code" id="item-code">
-            <button type="button" class="btn btn-primary" id="submit-item-code">Add Code</button>
+        {% if no_item_code %}
+            <h2>Link your Aqua Watch device to your account</h2>
+            <br>
+            <div class="product_container">
+                <input type="text" placeholder="Enter product code" name="item-code">
+                <button type="button" id="product-code">Add Code</button>
+            </div>
+            <br><br><br><br><br><br><br><br><br><br><br><br><br>
         {% endif %}
     </div>
     
     <script src= "{{ url_for('static',filename='js/events.js') }}"></script>
-    <script >
+    <script>
     $(document).ready(function(){
             console.log("ready to go");
             //let b = "{{url_for('index')}}";
