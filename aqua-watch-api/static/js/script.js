@@ -29,3 +29,18 @@ function initMap() {
 	})
 }
 
+
+/* Toggle Info */
+function toggle(id, button) {
+	var x = document.getElementById(id);
+	var b = document.getElementById(button);
+
+	if (x.style.display === "none") {
+		x.style.display = "block";
+		b.value = "-"
+	}
+	else {
+		x.style.display = "none";
+		b.value = "+"
+	}
+}

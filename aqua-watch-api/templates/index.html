@@ -14,7 +14,8 @@
     <script type="text/javascript" src="../static/js/script.js"></script>
 </head>
 
-<body>
+<body class="Site">
+<div class="body_wrapper">
 	<header class="header_homepage">
 		<div class="menu">
 				<a href="#">
@@ -45,29 +46,31 @@
         {% endif %}
 	</header>
 
-	<!-- Side Navigation: appears when opened -->
-	<div id="mySidenav" class="sidenav">
-        <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
-        <a href="{{ url_for('index') }}" class="active">Home | Search</a><hr>
-        <a href="{{ url_for('your_water_quality') }}">Your Water Quality</a><hr>
-        <a href="{{ url_for('report_guide') }}">Understanding the Report</a><hr>
-	</div>
+    <main class="Site_content">
+    	<!-- Side Navigation: appears when opened -->
+    	<div id="mySidenav" class="sidenav">
+            <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+            <a href="{{ url_for('index') }}" class="active">Search</a><hr>
+            <a href="{{ url_for('your_water_quality') }}">Your Water Quality</a><hr>
+            <a href="{{ url_for('report_guide') }}">Understanding the Report</a><hr>
+    	</div>
 
-	<div class="parallax">
-		<div class="parallax_text homepage">
-			<h2>Learn about the water quality in any area</h2>
-			<br>
-			<div class="search_container">
-                <form method="post" action="{{ url_for('mapview') }}">
-				    <input type="text" placeholder="Search by address" name="search">
-  				    <button type="submit">Search</button>
-                </form>
-  			</div>
-  		</div>
-	</div>
+    	<div class="parallax">
+    		<div class="parallax_text homepage">
+    			<h2>Learn about the water quality in any area</h2>
+    			<br>
+    			<div class="search_container">
+                    <form method="post" action="{{ url_for('mapview') }}">
+    				    <input type="text" placeholder="Search by address" name="search">
+      				    <button type="submit">Search</button>
+                    </form>
+      			</div>
+      		</div>
+    	</div>
 
-	<div class="container_content">
-	</div>
+    	<div class="container_content">
+    	</div>
+    </main>
 
 	<footer>
 		<div class="footer_text">
@@ -75,7 +78,7 @@
 			<h2>Boston University Spring 2018</h2>
 		</div>
 	</footer>
-
+</div>
 </body>
 </html>
 

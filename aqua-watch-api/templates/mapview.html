@@ -17,7 +17,7 @@
 
 </head>
 
-<body>
+<body class="Site">
     <header class="header_subpage">
         <div class="menu">
                 <a href="#">
@@ -48,61 +48,62 @@
         {% endif %}
     </header>
 
+    <main class="Site_content">
     <!-- Side Navigation: appears when opened -->
-    <div id="mySidenav" class="sidenav">
-        <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
-        <a href="{{ url_for('index') }}" class="active">Home | Search</a><hr>
-        <a href="{{ url_for('your_water_quality') }}">Your Water Quality</a><hr>
-        <a href="{{ url_for('report_guide') }}">Understanding the Report</a><hr>
-    </div>
+        <div id="mySidenav" class="sidenav">
+            <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+            <a href="{{ url_for('index') }}" class="active">Search</a><hr>
+            <a href="{{ url_for('your_water_quality') }}">Your Water Quality</a><hr>
+            <a href="{{ url_for('report_guide') }}">Understanding the Report</a><hr>
+        </div>
 
-    <div class="parallax">
-        <div class="parallax_text homepage">
-            <h2>Learn about the water quality in any area</h2>
-            <br>
-            <div class="search_container">
-                <form method="post" action="{{ url_for('mapview') }}">
-                    <input type="text" placeholder="Search by address" name="search">
-                    <button type="submit">Search</button>
-                </form>
+        <div class="parallax">
+            <div class="parallax_text homepage">
+                <h2>Learn about the water quality in any area</h2>
+                <br>
+                <div class="search_container">
+                    <form method="post" action="{{ url_for('mapview') }}">
+                        <input type="text" placeholder="Search by address" name="search">
+                        <button type="submit">Search</button>
+                    </form>
+                </div>
             </div>
         </div>
-    </div>
 
-    <div class="container_content">
+        <div class="container_content">
 
-        {% if location %}
-            <h2>{{ location }}</h2>
-        {% endif %}
+            {% if location %}
+                <h2>{{ location }}</h2>
+            {% endif %}
 
-        </br>
+            </br>
 
-        {% if message %}
-            <h2>{{ message }}</h2>
-        {% endif %}
+            {% if message %}
+                <h2>{{ message }}</h2>
+            {% endif %}
 
-        </br>
+            </br>
 
-        {% if results %}
-            {% for result in results %}
-                <img src={{ res_img }} />
-                <p>Location: {{result[0]}}</p>
-                <p>Latitude: {{result[1]}}</p>
-                <p>Longitude: {{result[2]}}</p>
-                <p>Oxidation-Reduction-Potential: {{result[3]}}</p>
-                <p>Total Dissolved Solids: {{result[4]}}</p>
-                <p>Turbidity: {{result[5]}}</p>
-                <p>ph: {{result[6]}}</p>
-                <p>Conductivity: {{result[7]}}</p>
-                </br>
-            {% endfor %}
-        {% endif %}
+            {% if results %}
+                {% for result in results %}
+                    <img src={{ res_img }} />
+                    <p>Location: {{result[0]}}</p>
+                    <p>Latitude: {{result[1]}}</p>
+                    <p>Longitude: {{result[2]}}</p>
+                    <p>Oxidation-Reduction-Potential: {{result[3]}}</p>
+                    <p>Total Dissolved Solids: {{result[4]}}</p>
+                    <p>Turbidity: {{result[5]}}</p>
+                    <p>ph: {{result[6]}}</p>
+                    <p>Conductivity: {{result[7]}}</p>
+                    </br>
+                {% endfor %}
+            {% endif %}
+        </div>
 
-    </div>
-
-    <div id="map">
-        {{mymap.html}}
-    </div>
+        <div id="map">
+            {{mymap.html}}
+        </div>
+    </main>
 
     <footer>
         <div class="footer_text">
@@ -110,8 +111,6 @@
             <h2>Boston University Spring 2018</h2>
         </div>
     </footer>
-
-
 
 </body>
 </html>

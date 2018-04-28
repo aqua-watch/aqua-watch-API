@@ -14,7 +14,7 @@
     <script type="text/javascript" src="../static/js/script.js"></script>
 </head>
 
-<body>
+<body class="Site">
 	<header class="header_subpage">
         <div class="menu">
                 <a href="#">
@@ -46,47 +46,49 @@
     </header>
 
     <!-- Side Navigation: appears when opened -->
-	<div id="mySidenav" class="sidenav">
-        <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
-        <a href="{{ url_for('index') }}">Home | Search</a><hr>
-        <a href="{{ url_for('your_water_quality') }}" class="active">Your Water Quality</a><hr>
-        <a href="{{ url_for('report_guide') }}">Understanding the Report</a><hr>
-	</div>
+    <main class="Site_content">
+        <div id="mySidenav" class="sidenav">
+            <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+            <a href="{{ url_for('index') }}">Search</a><hr>
+            <a href="{{ url_for('your_water_quality') }}" class="active">Your Water Quality</a><hr>
+            <a href="{{ url_for('report_guide') }}">Understanding the Report</a><hr>
+        </div>
     
-    <div class="container_content">
-        {% if not_logged_in %}
-            <h2>You need to be logged in to view your water quality.</h2>
-            <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
-        {% endif %}
+        <div class="container_content">
+            {% if not_logged_in %}
+                <h2>You need to be logged in to view your water quality.</h2>
+            {% endif %}
 
-        {% if has_item_code %}
-        <div class="page-header"> <h2> Your item code: {{item_code}} </h2></div>
-        </br>
-        <ul>
-        {% for key, value in results.items() %} 
-            <h3><li><b>{{key}}</b>: {{value}}</li></h3>
-        {% endfor %}
-        </ul>
-        {% endif %}
+            {% if has_item_code %}
+            <div class="page-header"> <h2> Your item code: {{item_code}} </h2></div>
+            </br>
+            <ul>
+            {% for key, value in results.items() %} 
+                <h3><li><b>{{key}}</b>: {{value}}</li></h3>
+            {% endfor %}
+            </ul>
+            {% endif %}
 
-        {% if no_address %}
-            <h2> Add/Update an address associated with your product </h2>
-            <label for="address"> Address: </label>
-            <input type="text" name="address" id="address">
+            {% if no_address %}
+                <h2> Add/Update an address associated with your product </h2>
+                <label for="address"> Address: </label>
+                <input type="text" name="address" id="address">
 
-            <button class="btn tbn-primary" id="add-address">Add Address</button> 
-        {% endif %}
+                <button class="btn tbn-primary" id="add-address">Add Address</button> 
+            {% endif %}
 
-        {% if no_item_code %}
-            <h2>Link your Aqua Watch device to your account</h2>
-            <br>
-            <div class="product_container">
-                <input type="text" placeholder="Enter product code" name="item-code">
-                <button type="button" id="product-code">Add Code</button>
-            </div>
-            <br><br><br><br><br><br><br><br><br><br><br><br><br>
-        {% endif %}
-    </div>
+            {% if no_item_code %}
+                <h2>Link your Aqua Watch device to your account</h2>
+                <br>
+                <div class="product_container">
+                    <input type="text" placeholder="Enter product code" name="item-code">
+                    <button type="button" id="product-code">Add Code</button>
+                </div>
+                <br><br><br><br><br><br><br><br><br><br><br><br><br>
+            {% endif %}
+        </div>
+    </main>
+
     
     <script src= "{{ url_for('static',filename='js/events.js') }}"></script>
     <script>
@@ -98,6 +100,7 @@
             events.yourWaterQuality();
         });
     </script>
+
     <footer>
 		<div class="footer_text">
 			<h1>CS591 Project</h1>
