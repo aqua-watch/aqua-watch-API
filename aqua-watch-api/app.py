@@ -337,8 +337,7 @@ def mapview():
                 data_marker_tuples += [map_dict[key][:-1]]
             marker_tuples = []
             for m in data_marker_tuples:
-                marker_tuples += [
-                    (m[1], m[2], None, determine_marker(m[orp], m[tds], m[turbidity], m[ph], m[conductivity]))]
+                marker_tuples += [(m[1], m[2], None, determine_marker(m[orp], m[tds], m[turbidity], m[ph], m[conductivity]))]
             # create map
             my_map = Map(identifier="view-side", lat=latitude, lng=longitude,
                          style="height:600px;width:900px;margin:0px;", zoom=16,
@@ -376,18 +375,10 @@ def determine_marker(s1, s2, s3, s4, s5):
 
 @app.route('/sensors', methods=['POST'])
 def extract_data():
-    # tested with: [{"address": "111 Cummington Mall, Boston, MA 02215, USA", "latitude": 42.3490961,
-    # "longitude": -71.1041893, "orp": "200 mV", "tds": "500 mg/L", "turbidity": "0.90 NTU", "ph": "7.5",
-    # "conductivity": "500 uS/cm", "item-code": "99MQQR9M"}]
-
     # has to be a list of one or more javascript objects
     # for debugging purposes I empty the database before inserting every time this function is called
     # we only have limited storage space
-    # data.remove({})
-
-    cursor = data.find({})
-    for document in cursor:
-        print(document)
+    testmapping.remove({})
 
     # to get data as string
     response = request.get_data().decode("utf-8")
@@ -396,16 +387,16 @@ def extract_data():
     docs = literal_eval(response)
     # if data is json instead of raw uncomment line below and comment line above
     # response = json.loads(response)
-    docs["address"] = ""
-    docs["latitude"] = ""
-    docs["longitude"] = ""
-    # docs['item-code'] = ""
+    # docs["address"] = ""
+    # docs["latitude"] = ""
+    # docs["longitude"] = ""
+    # docs["product-code"] = ""
     # convert list of dictionaries to list of javascript objects
-    docs = json.dumps([docs])
+    docs = json.dumps(docs)
     # convert list of javascript objects to MongoDB documents
     docs = json_util.loads(docs)
     # insert many documents into cloud database
-    data.insert_many(docs)
+    testmapping.insert_many(docs)
     return "successful"
 
 @app.route('/your_water_quality', methods=['GET'])
@@ -423,17 +414,58 @@ def your_water_quality():
             return render_template('your_water_quality.html', no_item_code=1, fname=user['fname'], logged_in=1)
         
         item_code = item_code.strip()
-        cursor = list(data.find({"product-code": item_code}))
+        cursor = list(testmapping.find({"product-code": item_code}))
         # to store results from cursor
-        results = cursor[0]
-        results = removekey(results, "_id")
+        # results = removekey(results, "_id")
+        results = []
+        for i in range(len(cursor)):
+            current = cursor[i]
+            results += [[current['address'], current['latitude'], current['longitude'], current['orp'], current['tds'],
+                         current['turbidity'], current['ph'], current['conductivity']]]
 
-        if results["address"] == "" or results["address"] == None:
+        if (len(results) == 0):
+            message = "No data for this product code yet"
+            if user['fname'] ==None:
+                return render_template('your_water_quality.html', no_item_code=1, fname=user['fname'], logged_in=1, message=message)
+            else:
+                return render_template('your_water_quality.html', no_item_code=1, fname=user['fname'], logged_in=1, message=message)
+
+        if (len(results) > 1):
+            for i in range(len(results)):
+                if (results[i][0] == ""):
+                    results[0][0] = ""
+                    results[0][1] = ""
+                    results[0][2] = ""
+                    break
+            results[0] = results[0] + [1]
+            for i in range(1, len(results)):
+                results[0][orp] += results[i][orp]
+                results[0][tds] += results[i][tds]
+                results[0][turbidity] += results[i][turbidity]
+                results[0][ph] += results[i][ph]
+                results[0][conductivity] += results[i][conductivity]
+                results[0][8] += 1
+            results = [results[0]]
+            results[0][orp] /= results[0][8]
+            results[0][tds] /= results[0][8]
+            results[0][turbidity] /= results[0][8]
+            results[0][ph] /= results[0][8]
+            results[0][conductivity] /= results[0][8]
+            results = [results[0][:-1]]
+        res_img = determine_marker(results[0][orp], results[0][tds], results[0][turbidity], results[0][ph],
+                                   results[0][conductivity])
+        # add units to results displayed in html page
+        results[0][orp] = str(results[0][orp]) + units["orp"]
+        results[0][tds] = str(results[0][tds]) + units["tds"]
+        results[0][turbidity] = str(results[0][turbidity]) + units["turbidity"]
+        results[0][conductivity] = str(results[0][conductivity]) + units["conductivity"]
+
+        if results[0][0] == "" or results[0][0] == None:
             return render_template('your_water_quality.html', fname=user['fname'], item_code=item_code, has_item_code=1,
-                               results=results, logged_in=1, no_address=1)
+                               results=results, res_img=res_img, logged_in=1, no_address=1)
         else:
             return render_template('your_water_quality.html', fname=user['fname'], item_code=item_code, has_item_code=1,
-                               results=results, logged_in=1, has_address=1)
+                               results=results, res_img=res_img, logged_in=1, has_address=1)
 
 def removekey(d, key):
     r = dict(d)
@@ -444,7 +476,7 @@ def removekey(d, key):
 def add_address():
     try:
         address = request.form.get('address')
-        code = request.form.get('code')
+        code = request.form.get('item_code')
 
     except Exception as e:
         return json.dumps("incorrect request" + str(e))
@@ -462,18 +494,17 @@ def add_address():
     longitude = response['results'][0]['geometry']['location']['lng']
 
     # update the collection
-    data.update_one(
-        {"code": code},
-        {
-            "$set": {
-                "address": address,
-                "latitude": latitude,
-                "longitude": longitude
+    testmapping.update_many(
+        {"product-code": code},
+        {"$set": {
+            "address": address,
+            "latitude": latitude,
+            "longitude": longitude
             }
         }
     )
 
-    return "True"
+    return "Perfect"
 
 @app.route('/report_guide', methods=['GET'])
 def report_guide():
