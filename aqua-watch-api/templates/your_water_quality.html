@@ -14,7 +14,7 @@
     <script type="text/javascript" src="../static/js/script.js"></script>
 </head>
 
-<body>
+<body class="Site">
 	<header class="header_subpage">
         <div class="menu">
                 <a href="#">
@@ -46,18 +46,18 @@
     </header>
 
     <!-- Side Navigation: appears when opened -->
-	<div id="mySidenav" class="sidenav">
-        <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
-        <a href="{{ url_for('index') }}">Home | Search</a><hr>
-        <a href="{{ url_for('your_water_quality') }}" class="active">Your Water Quality</a><hr>
-        <a href="{{ url_for('report_guide') }}">Understanding the Report</a><hr>
-	</div>
+    <main class="Site_content">
+        <div id="mySidenav" class="sidenav">
+            <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+            <a href="{{ url_for('index') }}">Search</a><hr>
+            <a href="{{ url_for('your_water_quality') }}" class="active">Your Water Quality</a><hr>
+            <a href="{{ url_for('report_guide') }}">Understanding the Report</a><hr>
+        </div>
     
-    <div class="container_content">
-        {% if not_logged_in %}
-            <h2>You need to be logged in to view your water quality.</h2>
-            <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
-        {% endif %}
+        <div class="container_content">
+            {% if not_logged_in %}
+                <h2>You need to be logged in to view your water quality.</h2>
+            {% endif %}
 
         {% if has_item_code %}
             <div class="page-header"> <h2> Your item code: {{item_code}} </h2></div>
@@ -114,6 +114,7 @@
             events.yourWaterQuality();
         });
     </script>
+
     <footer>
 		<div class="footer_text">
 			<h1>CS591 Project</h1>
