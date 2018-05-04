@@ -8,7 +8,8 @@ var Events = class events{
   	}
 
   	yourWaterQuality(){
-  		$("#submit-item-code").on("click", addItemCode);
+  		//$("#submit-item-code").on("click", addItemCode);
+		$("#product-code").on("click", addItemCode);
   		$("#add-address").on("click", addAddress);
 
   		function addAddress(){

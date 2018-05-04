@@ -289,7 +289,7 @@ Containers
 .product_container {
     background-color: white;
     display: inline-block;
-    width: 700px;
+    width: 800px;
 }
 
 .product_container input[type=text] {
@@ -308,7 +308,7 @@ Containers
     outline: none;
 }
 
-#product-code {
+#product-code, #add-address {
     float: left;
     margin-left: 5px;
     padding: 11px;
@@ -318,7 +318,6 @@ Containers
     border: none;
     border-radius: 10px;
     cursor: pointer;
-
 }
 
 #product-code button:hover{
