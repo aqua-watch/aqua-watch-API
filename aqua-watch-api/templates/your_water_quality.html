@@ -59,35 +59,49 @@
                 <h2>You need to be logged in to view your water quality.</h2>
             {% endif %}
 
-            {% if has_item_code %}
+        {% if has_item_code %}
             <div class="page-header"> <h2> Your item code: {{item_code}} </h2></div>
             </br>
-            <ul>
-            {% for key, value in results.items() %} 
-                <h3><li><b>{{key}}</b>: {{value}}</li></h3>
+        {% endif %}
+
+        {% if results %}
+            {% for result in results %}
+                <img src={{ res_img }} />
+                <p>Location: {{result[0]}}</p>
+                <p>Latitude: {{result[1]}}</p>
+                <p>Longitude: {{result[2]}}</p>
+                <p>Oxidation-Reduction-Potential: {{result[3]}}</p>
+                <p>Total Dissolved Solids: {{result[4]}}</p>
+                <p>Turbidity: {{result[5]}}</p>
+                <p>ph: {{result[6]}}</p>
+                <p>Conductivity: {{result[7]}}</p>
+                </br>
             {% endfor %}
-            </ul>
-            {% endif %}
+        {% endif %}
 
-            {% if no_address %}
-                <h2> Add/Update an address associated with your product </h2>
-                <label for="address"> Address: </label>
-                <input type="text" name="address" id="address">
+        {% if no_address %}
+            <h2>Add/Update the address associated with your product</h2>
+            <label for="address"> Address: </label>
+            <div class="product_container">
+                <input type="text" placeholder="Enter address" name="address" id="address">
+                <button type="button" id="add-address">Add/Update Address</button>
+            </div>
+            <br><br><br><br><br><br><br><br><br><br><br><br><br>
+        {% endif %}
 
-                <button class="btn tbn-primary" id="add-address">Add Address</button> 
-            {% endif %}
+        {% if no_item_code %}
+            <h2>Enter product code to see water quality</h2>
+            <br>
+            <div class="product_container">
+                <input type="text" placeholder="Enter product code" name="item-code" id="item-code">
+                <button type="button" id="product-code">My Water Quality</button>
+            </div>
+        {% endif %}
 
-            {% if no_item_code %}
-                <h2>Link your Aqua Watch device to your account</h2>
-                <br>
-                <div class="product_container">
-                    <input type="text" placeholder="Enter product code" name="item-code">
-                    <button type="button" id="product-code">Add Code</button>
-                </div>
-            {% endif %}
-        </div>
-    </main>
-
+        {% if message %}
+            <h2>{{ message }}</h2>
+        {% endif %}
+    </div>
     
     <script src= "{{ url_for('static',filename='js/events.js') }}"></script>
     <script>
