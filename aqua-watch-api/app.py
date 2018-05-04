@@ -62,35 +62,13 @@ green_marker = 'http://maps.google.com/mapfiles/ms/icons/green-dot.png'
 yellow_marker = 'http://maps.google.com/mapfiles/ms/icons/yellow-dot.png'
 red_marker = 'http://maps.google.com/mapfiles/ms/icons/red-dot.png'
 
-# the user
-user = {'fname': None}
-
-class User():
-    def __init__(self, email, first_name, last_name, products=[]):
-        self.email = email
-        self.first_name = first_name
-        self.last_name = last_name
-        self.products = products
-
-    def is_authenticated(self):
-        return True
-
-    def is_active(self):
-        return True
-
-    def is_anonymous(self):
-        return False
-
-    def get_id(self):
-        return self.email
-
 @app.route("/")
 def index():
     # main page
-    if user['fname'] == None:
+    if 'user' not in flask.session:
         return render_template('index.html', not_logged_in=1)
     else:
-        return render_template('index.html', logged_in=1, fname=user['fname'])
+        return render_template('index.html', logged_in=1, fname=flask.session['user']['first_name'])
 
 # User login with Google account
 @app.route('/login', methods=['GET'])
@@ -109,10 +87,7 @@ def login():
     user_document = user_resource.get(userId='me').execute()
 
     email = user_document['emails'][0]['value']
-    lastName = user_document['name']['familyName']
-    firstName = user_document['name']['givenName']
 
-    """
     if users.find({'_id': email }).count() == 0:
         lastName = user_document['name']['familyName']
         firstName = user_document['name']['givenName']
@@ -121,20 +96,19 @@ def login():
             '_id': email,
             'first_name': firstName,
             'last_name': lastName,
-            'products': '',
-            })
-    """
+            'products': [],
+            }
+        )
+    user = users.find_one({'_id': email })
 
-    # image = user_document['image']['url']
-
-    user['fname'] = firstName
+    flask.session['user'] = user
 
     # Save credentials back to session in case access token was refreshed.
     # ACTION ITEM: In a production app, you likely want to save these
     #              credentials in a persistent database instead.
     flask.session['credentials'] = credentials_to_dict(credentials)
 
-    return render_template('index.html', logged_in=1, fname=user['fname'])
+    return render_template('index.html', logged_in=1, fname=flask.session['user']['first_name'])
 
 # Getting authorization from user through Google
 @app.route('/authorize')
@@ -186,7 +160,7 @@ def gCallback():
 def logout():
     if 'credentials' in flask.session:
         del flask.session['credentials']
-        user['fname'] = None
+        del flask.session['user']
 
     return render_template('index.html', not_logged_in=1)
 
@@ -234,10 +208,10 @@ def mapview():
         # handle invalid address
         if (response['status'] != 'OK'):
             message = "Invalid address. Try again."
-            if user['fname'] == None:
+            if 'user' not in flask.session:
                 return render_template('index.html', location=address, message=message, not_logged_in=1)
             else:
-                return render_template('index.html', location=address, message=message, fname=user['fname'],
+                return render_template('index.html', location=address, message=message, fname=flask.session['user']['first_name'],
                                        logged_in=1)
         # obtain values from response
         address = response['results'][0]['formatted_address']
@@ -260,10 +234,10 @@ def mapview():
                 zero_results = False
         if (len(results) == 0):
             message = "No data for this location or its surroundings yet"
-            if user['fname'] ==None:
+            if 'user' not in flask.session:
                 return render_template('index.html', location=address, message=message, not_logged_in=1)
             else:
-                return render_template('index.html', location=address, message=message, fname=user['fname'],
+                return render_template('index.html', location=address, message=message, fname=flask.session['user']['first_name'],
                                        logged_in=1)
         elif (zero_results):
             message = "No data for this location yet, but there is some data for its surroundings"
@@ -298,11 +272,11 @@ def mapview():
             my_map = Map(identifier="view-side", lat=latitude, lng=longitude,
                          style="height:600px;width:900px;margin:0px;", zoom=16,
                          markers=marker_tuples)
-            if user['fname']==None:
+            if 'user' not in flask.session:
                 return render_template('mapview.html', location=address, message=message, mymap=my_map, not_logged_in=1)
             else:
                 return render_template('mapview.html', location=address, message=message, mymap=my_map,
-                                       fname=user['fname'], logged_in=1)
+                                       fname=flask.session['user']['first_name'], logged_in=1)
         else:
             map_dict = {}
             # calculate the average for each sensor
@@ -343,18 +317,18 @@ def mapview():
             my_map = Map(identifier="view-side", lat=latitude, lng=longitude,
                          style="height:600px;width:900px;margin:0px;", zoom=16,
                          markers=marker_tuples)
-            if user['fname'] == None:
+            if 'user' not in flask.session:
                 return render_template('mapview.html', location=address, results=results, res_img=res_img, mymap=my_map,
                                        not_logged_in=1)
             else:
                 return render_template('mapview.html', location=address, results=results, res_img=res_img, mymap=my_map,
-                                       fname=user['fname'], logged_in=1)
+                                       fname=flask.session['user']['first_name'], logged_in=1)
     except:
         message = "Invalid address. Try again."
-        if user['fname'] == None:
+        if 'user' not in flask.session:
             return render_template('index.html', message=message, not_logged_in=1)
         else:
-            return render_template('index.html', message=message, fname=user['fname'], logged_in=1)
+            return render_template('index.html', message=message, fname=flask.session['user']['first_name'], logged_in=1)
 
 def determine_marker(s1, s2, s3, s4, s5):
     """ to determine the color of the marker
@@ -412,15 +386,16 @@ def extract_data():
 def your_water_quality():
     """ View function so far used for debugging
     """
-    if user['fname'] == None:
+    if 'user' not in flask.session:
         return render_template('your_water_quality.html', not_logged_in=1)
     
     else:
-        item_code = request.args.get("item-code")
+        #item_code = request.args.get("item-code")
+        products = flask.session['user']['products']
 
-        if (item_code == "" or item_code is None):
+        if (products == []):
             # generate the view so that they can add an item code
-            return render_template('your_water_quality.html', no_item_code=1, fname=user['fname'], logged_in=1)
+            return render_template('your_water_quality.html', no_item_code=1, fname=flask.session['user']['first_name'], logged_in=1)
         
         item_code = item_code.strip()
         cursor = list(data.find({"product-code": item_code}))
@@ -429,10 +404,10 @@ def your_water_quality():
         results = removekey(results, "_id")
 
         if results["address"] == "" or results["address"] == None:
-            return render_template('your_water_quality.html', fname=user['fname'], item_code=item_code, has_item_code=1,
+            return render_template('your_water_quality.html', fname=flask.session['user']['first_name'], item_code=item_code, has_item_code=1,
                                results=results, logged_in=1, no_address=1)
         else:
-            return render_template('your_water_quality.html', fname=user['fname'], item_code=item_code, has_item_code=1,
+            return render_template('your_water_quality.html', fname=flask.session['user']['first_name'], item_code=item_code, has_item_code=1,
                                results=results, logged_in=1, has_address=1)
 
 def removekey(d, key):
@@ -477,10 +452,10 @@ def add_address():
 
 @app.route('/report_guide', methods=['GET'])
 def report_guide():
-    if user['fname']==None:
+    if 'user' not in flask.session:
         return render_template('report_guide.html', not_logged_in=1)
     else:
-        return render_template('report_guide.html', fname=user['fname'], logged_in=1)
+        return render_template('report_guide.html', fname=flask.session['user']['first_name'], logged_in=1)
 
 if __name__ == "__main__":
     # When running locally, disable OAuthlib's HTTPs verification.
