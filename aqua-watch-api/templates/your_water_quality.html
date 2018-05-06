@@ -59,50 +59,47 @@
                 <h2>You need to be logged in to view your water quality.</h2>
             {% endif %}
 
-        {% if has_item_code %}
-            <div class="page-header"> <h2> Your item code: {{item_code}} </h2></div>
-            </br>
-        {% endif %}
-
-        {% if results %}
-            {% for result in results %}
-                <img src={{ res_img }} />
-                <p>Location: {{result[0]}}</p>
-                <p>Latitude: {{result[1]}}</p>
-                <p>Longitude: {{result[2]}}</p>
-                <p>Oxidation-Reduction-Potential: {{result[3]}}</p>
-                <p>Total Dissolved Solids: {{result[4]}}</p>
-                <p>Turbidity: {{result[5]}}</p>
-                <p>ph: {{result[6]}}</p>
-                <p>Conductivity: {{result[7]}}</p>
+            {% if has_item_code %}
+                <div class="page-header"> <h2> Your item code: {{item_code}} </h2></div>
                 </br>
-            {% endfor %}
-        {% endif %}
+            {% endif %}
 
-        {% if no_address %}
-            <h2>Add/Update the address associated with your product</h2>
-            <label for="address"> Address: </label>
-            <div class="product_container">
-                <input type="text" placeholder="Enter address" name="address" id="address">
-                <button type="button" id="add-address">Add/Update Address</button>
-            </div>
-            <br><br><br><br><br><br><br><br><br><br><br><br><br>
-        {% endif %}
+            {% if results %}
+                {% for result in results %}
+                    <img src={{ res_img }} />
+                    <p>Location: {{result[0]}}</p>
+                    <p>Oxidation-Reduction-Potential: {{result[3]}}</p>
+                    <p>Total Dissolved Solids: {{result[4]}}</p>
+                    <p>Turbidity: {{result[5]}}</p>
+                    <p>ph: {{result[6]}}</p>
+                    <p>Conductivity: {{result[7]}}</p>
+                    </br>
+                {% endfor %}
+            {% endif %}
 
-        {% if no_item_code %}
-            <h2>Enter product code to see water quality</h2>
-            <br>
-            <div class="product_container">
-                <input type="text" placeholder="Enter product code" name="item-code" id="item-code">
-                <button type="button" id="product-code">My Water Quality</button>
-            </div>
-            <br><br><br><br><br><br><br><br><br><br><br><br><br>
-        {% endif %}
+            {% if no_address %}
+                <h2>Update the address associated with your product</h2>
+                <br>
+                <div class="product_container">
+                    <input type="text" placeholder="Enter address" name="address" id="address">
+                    <button type="button" id="add-address">Update</button>
+                </div>
+            {% endif %}
 
-        {% if message %}
-            <h2>{{ message }}</h2>
-        {% endif %}
-    </div>
+            {% if no_item_code %}
+                <h2>Enter product code to see water quality</h2>
+                <br>
+                <div class="product_container">
+                    <input type="text" placeholder="Enter product code" name="item-code" id="item-code">
+                    <button type="button" id="product-code">Enter</button>
+                </div>
+            {% endif %}
+
+            {% if message %}
+                <h2>{{ message }}</h2>
+            {% endif %}
+        </div>
+    </main>
 
     <script src= "{{ url_for('static',filename='js/events.js') }}"></script>
     <script>
