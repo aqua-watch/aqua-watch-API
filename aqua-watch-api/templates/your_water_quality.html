@@ -96,13 +96,14 @@
                 <input type="text" placeholder="Enter product code" name="item-code" id="item-code">
                 <button type="button" id="product-code">My Water Quality</button>
             </div>
+            <br><br><br><br><br><br><br><br><br><br><br><br><br>
         {% endif %}
 
         {% if message %}
             <h2>{{ message }}</h2>
         {% endif %}
     </div>
-    
+
     <script src= "{{ url_for('static',filename='js/events.js') }}"></script>
     <script>
     $(document).ready(function(){

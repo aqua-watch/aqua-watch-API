@@ -15,9 +15,8 @@ from flask_googlemaps import GoogleMaps, Map
 from pymongo import MongoClient
 from bson import json_util
 import urllib.parse, urllib.request
-import json, pprint
+import json
 from ast import literal_eval
-from math import sqrt
 
 # This variable specifies the name of a file that contains the OAuth 2.0
 # information for this application, including its client_id and client_secret.
@@ -329,19 +328,12 @@ def mapview():
         else:
             return render_template('index.html', message=message, fname=flask.session['user']['first_name'], logged_in=1)
 
-def determine_marker(s1, s2, s3, s4, s5):
+def determine_marker(s_orp, s_tds, s_tur, s_ph, s_con):
     """ to determine the color of the marker
     """
-    normalization_denominator = sqrt(s1 ** 2 + s2 ** 2 + s3 ** 2 + s4 ** 2 + s5 ** 2)
-    s1 = abs(s1) / normalization_denominator
-    s2 = abs(s2) / normalization_denominator
-    s3 = abs(s3) / normalization_denominator
-    s4 = abs(s4) / normalization_denominator
-    s5 = abs(s5) / normalization_denominator
-    average_normalized = (s1 + s2 + s3 + s4 + s5) / 5
-    if (average_normalized <= 0.32):
+    if (s_orp >= 200 and s_orp <= 600 and s_tds <= 300 and s_tur <= 1 and s_ph >= 6.5 and s_ph <= 7.5 and s_con <= 5):
         return green_marker
-    elif (average_normalized <= 0.34):
+    elif (s_orp >= 0 and s_orp <= 750 and s_tds <= 700 and s_tur <= 5 and s_ph >= 6 and s_ph <= 8 and s_con <= 7):
         return yellow_marker
     else:
         return red_marker
@@ -379,15 +371,14 @@ def your_water_quality():
     """
     if 'user' not in flask.session:
         return render_template('your_water_quality.html', not_logged_in=1)
-    
-    else:
-        #item_code = request.args.get("item-code")
-        products = flask.session['user']['products']
 
-        if (products == []):
+    else:
+        item_code = request.args.get("item-code")
+
+        if (item_code == "" or item_code is None):
             # generate the view so that they can add an item code
             return render_template('your_water_quality.html', no_item_code=1, fname=flask.session['user']['first_name'], logged_in=1)
-        
+
         item_code = item_code.strip()
         cursor = list(testmapping.find({"product-code": item_code}))
         # to store results from cursor
@@ -400,7 +391,8 @@ def your_water_quality():
 
         if (len(results) == 0):
             message = "No data for this product code yet"
-            return render_template('your_water_quality.html', no_item_code=1, fname=flask.session['user']['first_name'], logged_in=1, message=message)
+            return render_template('your_water_quality.html', no_item_code=1, fname=flask.session['user']['first_name'],
+                                   logged_in=1, message=message)
 
         if (len(results) > 1):
             for i in range(len(results)):
@@ -433,11 +425,11 @@ def your_water_quality():
         results[0][conductivity] = str(results[0][conductivity]) + units["conductivity"]
 
         if results[0][0] == "" or results[0][0] == None:
-            return render_template('your_water_quality.html', fname=user['fname'], item_code=item_code, has_item_code=1,
-                               results=results, res_img=res_img, logged_in=1, no_address=1)
+            return render_template('your_water_quality.html', fname=flask.session['user']['first_name'], item_code=item_code,
+                                   has_item_code=1, results=results, res_img=res_img, logged_in=1, no_address=1)
         else:
-            return render_template('your_water_quality.html', fname=user['fname'], item_code=item_code, has_item_code=1,
-                               results=results, res_img=res_img, logged_in=1, has_address=1)
+            return render_template('your_water_quality.html', fname=flask.session['user']['first_name'], item_code=item_code,
+                                   has_item_code=1, results=results, res_img=res_img, logged_in=1, has_address=1)
 
 def removekey(d, key):
     r = dict(d)
