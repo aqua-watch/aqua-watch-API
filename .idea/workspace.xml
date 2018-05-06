@@ -2,9 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="36f78110-8aba-429f-8a69-274084deb9ed" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/aqua-watch-api/app.py" afterPath="$PROJECT_DIR$/aqua-watch-api/app.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/aqua-watch-api/templates/your_water_quality.html" afterPath="$PROJECT_DIR$/aqua-watch-api/templates/your_water_quality.html" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -16,15 +14,15 @@
   <component name="CoverageDataManager">
     <SUITE FILE_PATH="coverage/aqua_watch_API$app.coverage" NAME="app Coverage Results" MODIFIED="1522726402855" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/aqua-watch-api" />
     <SUITE FILE_PATH="coverage/aqua_watch_API_frontend$app.coverage" NAME="app Coverage Results" MODIFIED="1521913634368" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/aqua-watch-api" />
-    <SUITE FILE_PATH="coverage/aqua_watch_api$app.coverage" NAME="app Coverage Results" MODIFIED="1525566943173" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/aqua-watch-api" />
+    <SUITE FILE_PATH="coverage/aqua_watch_api$app.coverage" NAME="app Coverage Results" MODIFIED="1525579105091" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/aqua-watch-api" />
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="375">
       <file leaf-file-name="app.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/aqua-watch-api/app.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="390">
-              <caret line="339" column="0" lean-forward="true" selection-start-line="339" selection-start-column="0" selection-end-line="339" selection-end-column="0" />
+            <state relative-caret-position="105">
+              <caret line="5" column="0" lean-forward="true" selection-start-line="5" selection-start-column="0" selection-end-line="5" selection-end-column="0" />
               <folding>
                 <element signature="e#108#185#0" expanded="true" />
               </folding>
@@ -36,7 +34,7 @@
         <entry file="file://$PROJECT_DIR$/aqua-watch-api/data.json">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="0">
-              <caret line="0" column="1" lean-forward="false" selection-start-line="0" selection-start-column="1" selection-end-line="0" selection-end-column="1" />
+              <caret line="0" column="0" lean-forward="true" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -55,9 +53,13 @@
       <file leaf-file-name="mapview.html" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/aqua-watch-api/templates/mapview.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="95">
+            <state relative-caret-position="1848">
               <caret line="88" column="41" lean-forward="false" selection-start-line="88" selection-start-column="41" selection-end-line="88" selection-end-column="41" />
-              <folding />
+              <folding>
+                <marker date="1525577388094" expanded="true" signature="3318:3360" ph="..." />
+                <marker date="1525577388094" expanded="true" signature="3386:3535" ph="..." />
+                <marker date="1525577388094" expanded="true" signature="3420:3521" ph="..." />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -65,9 +67,15 @@
       <file leaf-file-name="your_water_quality.html" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/aqua-watch-api/templates/your_water_quality.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="89">
-              <caret line="105" column="0" lean-forward="true" selection-start-line="105" selection-start-column="0" selection-end-line="105" selection-end-column="0" />
-              <folding />
+            <state relative-caret-position="2142">
+              <caret line="102" column="0" lean-forward="false" selection-start-line="102" selection-start-column="0" selection-end-line="102" selection-end-column="0" />
+              <folding>
+                <marker date="1525577388098" expanded="true" signature="3875:4131" ph="..." />
+                <marker date="1525577388098" expanded="true" signature="3909:4116" ph="{...}" />
+                <marker date="1525577388098" expanded="true" signature="3994:4026" ph="//..." />
+                <marker date="1525577388098" expanded="true" signature="4145:4261" ph="..." />
+                <marker date="1525577388098" expanded="true" signature="4173:4250" ph="..." />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -175,8 +183,8 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scope" />
       <pane id="Scratches" />
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -549,7 +557,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="105">
           <caret line="5" column="0" lean-forward="false" selection-start-line="5" selection-start-column="0" selection-end-line="5" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -582,14 +589,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/aqua-watch-api/data.json">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="1" lean-forward="false" selection-start-line="0" selection-start-column="1" selection-end-line="0" selection-end-column="1" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/aqua-watch-api/static/js/events.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="441">
@@ -616,24 +615,42 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/aqua-watch-api/templates/mapview.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="95">
+        <state relative-caret-position="1848">
           <caret line="88" column="41" lean-forward="false" selection-start-line="88" selection-start-column="41" selection-end-line="88" selection-end-column="41" />
-          <folding />
+          <folding>
+            <marker date="1525577388094" expanded="true" signature="3318:3360" ph="..." />
+            <marker date="1525577388094" expanded="true" signature="3386:3535" ph="..." />
+            <marker date="1525577388094" expanded="true" signature="3420:3521" ph="..." />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/aqua-watch-api/templates/your_water_quality.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="89">
-          <caret line="105" column="0" lean-forward="true" selection-start-line="105" selection-start-column="0" selection-end-line="105" selection-end-column="0" />
+        <state relative-caret-position="2142">
+          <caret line="102" column="0" lean-forward="false" selection-start-line="102" selection-start-column="0" selection-end-line="102" selection-end-column="0" />
+          <folding>
+            <marker date="1525577388098" expanded="true" signature="3875:4131" ph="..." />
+            <marker date="1525577388098" expanded="true" signature="3909:4116" ph="{...}" />
+            <marker date="1525577388098" expanded="true" signature="3994:4026" ph="//..." />
+            <marker date="1525577388098" expanded="true" signature="4145:4261" ph="..." />
+            <marker date="1525577388098" expanded="true" signature="4173:4250" ph="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/aqua-watch-api/data.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="true" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/aqua-watch-api/app.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="390">
-          <caret line="339" column="0" lean-forward="true" selection-start-line="339" selection-start-column="0" selection-end-line="339" selection-end-column="0" />
+        <state relative-caret-position="105">
+          <caret line="5" column="0" lean-forward="true" selection-start-line="5" selection-start-column="0" selection-end-line="5" selection-end-column="0" />
           <folding>
             <element signature="e#108#185#0" expanded="true" />
           </folding>

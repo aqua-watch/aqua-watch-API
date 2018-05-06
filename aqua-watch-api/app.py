@@ -218,7 +218,7 @@ def mapview():
         longitude = response['results'][0]['geometry']['location']['lng']
         lat_range = [latitude - 0.005, latitude + 0.005]
         lon_range = [longitude - 0.05, longitude + 0.05]
-        cursor = list(testmapping.find({'$and': [{"latitude": {'$gte': lat_range[0]}}, {"latitude": {'$lte': lat_range[1]}},
+        cursor = list(data.find({'$and': [{"latitude": {'$gte': lat_range[0]}}, {"latitude": {'$lte': lat_range[1]}},
                                          {"longitude": {'$gte': lon_range[0]}}, {"longitude": {'$lte': lon_range[1]}}]}))
         # query
         # cursor = list(testmapping.find({"address": address}))
@@ -331,9 +331,9 @@ def mapview():
 def determine_marker(s_orp, s_tds, s_tur, s_ph, s_con):
     """ to determine the color of the marker
     """
-    if (s_orp >= 200 and s_orp <= 600 and s_tds <= 300 and s_tur <= 1 and s_ph >= 6.5 and s_ph <= 7.5 and s_con <= 5):
+    if (s_orp >= 200 and s_orp <= 600 and s_tds <= 300 and s_tur <= 200 and s_ph >= 6.8 and s_ph <= 7.2 and s_con <= 4):
         return green_marker
-    elif (s_orp >= 0 and s_orp <= 750 and s_tds <= 700 and s_tur <= 5 and s_ph >= 6 and s_ph <= 8 and s_con <= 7):
+    elif (s_orp >= 0 and s_orp <= 750 and s_tds <= 600 and s_tur <= 300 and s_ph >= 6.5 and s_ph <= 7.5 and s_con <= 6):
         return yellow_marker
     else:
         return red_marker
@@ -344,7 +344,7 @@ def extract_data():
     # has to be a list of one or more javascript objects
     # for debugging purposes I empty the database before inserting every time this function is called
     # we only have limited storage space
-    testmapping.remove({})
+    data.remove({})
 
     # to get data as string
     response = request.get_data().decode("utf-8")
@@ -362,7 +362,7 @@ def extract_data():
     # convert list of javascript objects to MongoDB documents
     docs = json_util.loads(docs)
     # insert many documents into cloud database
-    testmapping.insert_many(docs)
+    data.insert_many(docs)
     return "successful"
 
 @app.route('/your_water_quality', methods=['GET'])
