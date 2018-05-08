@@ -380,7 +380,7 @@ def your_water_quality():
             return render_template('your_water_quality.html', no_item_code=1, fname=flask.session['user']['first_name'], logged_in=1)
 
         item_code = item_code.strip()
-        cursor = list(testmapping.find({"product-code": item_code}))
+        cursor = list(data.find({"product-code": item_code}))
         # to store results from cursor
         # results = removekey(results, "_id")
         results = []
